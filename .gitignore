@@ -1,0 +1,13 @@
+node_modules
+site/.vitepress/dist
+site/.vitepress/cache
+.DS_Store
+deploy/.env.production
+deploy/backups/
+
+# Sibling directories for self-hosting
+# Adopters clone these repos into this directory
+/edtech-lms-api/
+/edtech-lms-rpi-api/
+/edtech-lms-ui/
+/edtech-expo/

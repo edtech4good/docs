@@ -1,0 +1,40 @@
+# Caddy fronts all four services and provisions/renews Let's Encrypt certs
+# automatically. The only prerequisites are that the four domains below have A
+# records pointing at the host, and that ports 80/443 are open.
+#
+# Domains are injected from .env.production via docker-compose (the {$VAR} form).
+# Each site terminates TLS and reverse-proxies (APIs) or is served static (UIs).
+
+# Admin UI (Angular, nginx static in the admin-ui container).
+{$ADMIN_DOMAIN} {
+	reverse_proxy admin-ui:80
+	encode gzip
+}
+
+# Central LMS API.
+{$API_DOMAIN} {
+	reverse_proxy central-api:3000
+	encode gzip
+}
+
+# Student ("Pi") API: what the Expo app calls, and what the central API proxies
+# to via RPI_CLOUD.
+{$STUDENT_API_DOMAIN} {
+	reverse_proxy student-api:3001
+	encode gzip
+}
+
+# Expo web app (static export, nginx in the expo-web container).
+{$APP_DOMAIN} {
+	# Static media served from ./media on the host at /media/*. Optional: only
+	# needed when curriculum media is not on an S3-compatible bucket.
+	handle_path /media/* {
+		root * /srv/media
+		file_server
+		header Cache-Control "public, max-age=3600"
+	}
+	handle {
+		reverse_proxy expo-web:80
+		encode gzip
+	}
+}

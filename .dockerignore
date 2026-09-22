@@ -1,0 +1,10 @@
+# The build context for the API and Expo web images is this repo's root, not
+# deploy/ (see docker-compose.prod.yml, `context: ..`), because it also needs
+# to COPY the sibling app repos cloned next to it. Trim that context here.
+**/node_modules
+**/.git
+**/build
+**/dist
+site/
+deploy/backups/
+deploy/media/

@@ -1,0 +1,5 @@
+# Ignore all media files except the tracking stubs
+*
+!.gitkeep
+!README.md
+!.gitignore

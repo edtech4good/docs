@@ -1,0 +1,40 @@
+# Local MySQL for edtech4good (central LMS + classroom APIs).
+# From repo root: docker compose up -d
+# See the Local development guide (get-started/local-development) for credentials and .env wiring.
+# The root password and the edtech_local app user below are development
+# defaults, committed to a public repository. Change them before this
+# container is reachable from any network other than your own machine.
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: edtech-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: edtech_root_dev
+    volumes:
+      - edtech_mysql_data:/var/lib/mysql
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "127.0.0.1",
+          "-uroot",
+          "-pedtech_root_dev",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+
+volumes:
+  edtech_mysql_data:

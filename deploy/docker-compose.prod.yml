@@ -1,0 +1,111 @@
+# Production stack for a single host. A VPS works well; DigitalOcean is one
+# option.
+#
+#   cd deploy
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+#
+# Expects the four app repos checked out as siblings of this repo's root (clone
+# this docs repo, then clone edtech-lms-api, edtech-lms-rpi-api, edtech-lms-ui
+# and edtech-expo inside it): the API images build with `context: ..`, i.e.
+# this repo's root, so they can COPY their sibling source. Only Caddy publishes
+# ports; every app service is reached through it, so nothing else is exposed
+# to the internet.
+#
+# MySQL is NOT here by default. Use a managed MySQL service (automated backups
+# are a go-live requirement) and point DB_HOST at it. The `with-db` profile below
+# runs MySQL on the host instead: cheaper, but you own backups; see the guide.
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Domains consumed by the Caddyfile. Set these in .env.production.
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+      STUDENT_API_DOMAIN: ${STUDENT_API_DOMAIN}
+      APP_DOMAIN: ${APP_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./media:/srv/media:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [central-api, student-api, admin-ui, expo-web]
+
+  central-api:
+    build:
+      context: ..
+      dockerfile: deploy/edtech-lms-api.Dockerfile
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Both APIs sit behind Caddy here, so the rate limiter must key on the
+      # forwarded client address. Leave unset on a Pi or any bare host.
+      TRUST_PROXY: "1"
+    expose: ["3000"]
+
+  student-api:
+    build:
+      context: ..
+      dockerfile: deploy/edtech-lms-rpi-api.Dockerfile
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      NODE_ENV: production
+      RPI_PORT: "3001"
+      # Both APIs sit behind Caddy here, so the rate limiter must key on the
+      # forwarded client address. Leave unset on a Pi or any bare host.
+      TRUST_PROXY: "1"
+    expose: ["3001"]
+
+  # Angular admin UI. Builds from the repo's OWN Dockerfile (nginx static).
+  # NOTE: its API URL is baked in at build time from environment.prod.ts: fill
+  # that file before building (see the guide, "Build-time configuration").
+  admin-ui:
+    build:
+      context: ../edtech-lms-ui
+    restart: unless-stopped
+    expose: ["80"]
+
+  # Expo web static export. API base URL is a BUILD ARG (baked in); see the guide.
+  expo-web:
+    build:
+      context: ..
+      dockerfile: deploy/edtech-expo-web.Dockerfile
+      args:
+        EXPO_PUBLIC_BASE_URL: ${EXPO_PUBLIC_BASE_URL}
+        EXPO_PUBLIC_RESOURCE_URL: ${EXPO_PUBLIC_RESOURCE_URL}
+        EXPO_PUBLIC_RESOURCE_PATH: ${EXPO_PUBLIC_RESOURCE_PATH}
+    restart: unless-stopped
+    expose: ["80"]
+
+  # Optional on-host MySQL. Enable with `--profile with-db`. Prefer managed.
+  mysql:
+    image: mysql:8.0
+    profiles: ["with-db"]
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../docker/mysql-init:/docker-entrypoint-initdb.d:ro
+    expose: ["3306"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+volumes:
+  caddy_data:
+  caddy_config:
+  mysql_data:
