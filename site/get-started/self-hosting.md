@@ -166,6 +166,10 @@ A few values need care:
 - `RPI_CLOUD` must be the student API's public URL (`https://` + its DNS
   name). The central API's Online reports proxy through this; get it wrong
   and reports 500 instead of loading.
+- Leave `RPI_OFFLINE` unset. With it unset, the student API's bulk imports
+  (`PUT /import/master`, `/import/students`, `/import/teachers`) accept only
+  `SERVER_SYNC_KEY`, so no user login can replace content or rosters. Only a
+  classroom Pi sets it (see below).
 - `TRUST_PROXY=1` only makes sense behind Caddy, which this stack is. Don't
   set it if you ever run either API with nothing in front of it: a client
   could spoof `X-Forwarded-For` to dodge the rate limiter.
@@ -358,6 +362,11 @@ stack quietly drifts from what its code expects.
 - A secret manager. This kit uses a plain `.env.production` file on the host.
 - Raspberry Pi classroom images. The student API runs fine as a regular
   container; building an image for actual Pi hardware is a separate exercise.
+  One setting is already decided: a classroom Pi must run the student API
+  with `RPI_OFFLINE=true` (or `"offline": true` in `FORTYKAPIRPICONFIG`, which
+  replaces the `RPI_*` variables when set). That lets a teacher or admin token
+  load content with `PUT /import/master`, since a Pi with no internet can't
+  receive central's push. Roster imports stay sync-key only, even on a Pi.
 - Uptime monitoring and alerting.
 
 For how the pieces fit together, see [Architecture](/architecture/) and
