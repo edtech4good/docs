@@ -90,7 +90,7 @@ The app configured two HTTP client base URLs:
 - **Download** (when launched in Pi-oriented mode): calls Pi `export/log`, writes **`studentlog.zip`** to external storage (path depends on device storage settings, SD card path or a subdirectory under external storage).
 - **Upload** (when launched in online-oriented mode): reads **`studentlog.zip`**, builds multipart upload to the upload base URL's `log/import`.
 
-The teacher screen also chained behavior unrelated to log sync: after a successful cloud log upload it may call **`GET sync`** on the central API to refresh **`syncData.zip`** (curriculum), and after Pi log download it may **`PUT import/master`** on the Pi if the Pi connection check passes. Those are **curriculum / master** paths, not the log pipeline.
+The teacher screen also chained behavior unrelated to log sync: after a successful cloud log upload it may call **`GET sync`** on the central API to refresh **`syncData.zip`** (curriculum), and after Pi log download it may **`PUT import/master`** on the Pi if the Pi connection check passes. Those are **curriculum / master** paths, not the log pipeline. `PUT import/master` accepts a teacher token only when the Pi runs with `RPI_OFFLINE=true` (or `"offline": true` in `FORTYKAPIRPICONFIG`); otherwise only central's `SERVER_SYNC_KEY` can call it.
 
 ### 5.4 The Pi connection check
 
