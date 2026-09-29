@@ -175,15 +175,11 @@ All eleven remaining unguarded endpoints are legitimately public, and are listed
 `POST /auth/forgotpassword`, `POST /auth/token/validate/changepassword`, and
 `GET /common/templatetype`.
 
-### The twelfth was a CSV of children's names (guarded)
+### Baseline download is permission-gated
 
-`GET /curriculumbaseline/:curriculumbaselineid/download` had both its guard lines commented out. It streams `studentfirstname`, `schoolusername`, `schoolname` and each learner's assessment result. An anonymous `GET` returned **200** and a row reading `សុខា,khmz3y6dh,Demo Primary School,…`, demonstrated against a running stack, not inferred.
+`GET /curriculumbaseline/:curriculumbaselineid/download` returns learner identity data with each learner's assessment result, so it requires `view_download_student`: anonymous requests get 401, Teacher gets 403 (Teacher holds `view_baseline-endline` but not `view_download_student`), and Admin gets 200. Locked in by the [e2e authorization tests](https://github.com/edtech4good/edtech-lms-ui/tree/main/e2e/authorization).
 
-**It is the clearest example in this codebase of an accident mistaken for a control.** The handler proxies to the student API, which accepts a matching `SERVER_SYNC_KEY` on that route. The two apps fall back to *different* defaults, so locally the proxy 401s, the handler throws, and the endpoint 500s. It looks broken and therefore harmless. Setting that key correctly is a **required go-live step**, so the act of configuring the system properly is what arms the leak. Exactly the shape of `POST /auth/register`, which was safe only because it always 500'd.
-
-Now gated on `view_download_student` rather than a commented-out line. Anonymous 401, Teacher 403, Admin 200. Teacher holds `view_baseline-endline` but not `view_download_student`; the payload is learner identity data Teacher is deliberately denied. Verified live and locked in by [e2e authorization tests](https://github.com/edtech4good/edtech-lms-ui/tree/main/e2e/authorization).
-
-Two things worth carrying forward from it:
+Two things worth carrying forward:
 
 - **`@RequirePermissions(A, B)` is OR, not AND.** `CheckPermissionsGuard` uses `.some()`. Listing more permissions widens access; it cannot narrow it. To restrict, name the single permission the excluded role lacks.
 - **A commented-out guard is not documentation of intent you can trust.** The line here named the permission that would have handed Teacher the very data the project had just decided it must not see.
