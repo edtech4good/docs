@@ -134,11 +134,12 @@ one instance is built against `EXPO_PUBLIC_BASE_URL`, the other against
    `PUT`s it to the classroom server's `/import/master`, authenticated with
    `SERVER_SYNC_KEY`. See
    [sync.controller.ts](https://github.com/edtech4good/edtech-lms-api/blob/main/src/modules/sync/sync.controller.ts).
-3. Client-side path: the learner app downloads a zip from the central API's
-   `GET /sync/content`, then `PUT`s it to the classroom server's
-   `PUT /import/master`. The classroom API guards that route with AccessGuard
-   for an ADMIN, SUPERADMIN or TEACHER token, or an `Authorization` header
-   equal to the sync key. See
+3. Client-side path: a client can download a zip from the central API's
+   `GET /sync/content` and `PUT` it to the classroom server's
+   `PUT /import/master`; the current learner app does not call either. That
+   route always accepts the server sync key as the raw `Authorization`
+   header, and accepts an admin, superadmin or teacher token only when the
+   classroom server runs with `RPI_OFFLINE=true`. See
    [import.controller.ts](https://github.com/edtech4good/edtech-lms-rpi-api/blob/main/src/modules/import/import.controller.ts).
 
 ### B. Classroom to cloud: student and activity logs
@@ -149,8 +150,8 @@ one instance is built against `EXPO_PUBLIC_BASE_URL`, the other against
 2. A client can download that zip from the classroom server and upload it to
    the central API's `PUT /log/import`. See
    [log.controller.ts](https://github.com/edtech4good/edtech-lms-api/blob/main/src/modules/log/log.controller.ts).
-   This upload route is off by default (`LOG_IMPORT_ENABLED`), and the
-   current learner app does not implement the upload step.
+   This upload route is off unless `LOG_IMPORT_ENABLED` is `true` or `1`, and
+   the current learner app does not call it.
 
 ### C. Teacher and student login
 

@@ -19,7 +19,7 @@ This split matters for anything touching signup, verification or recovery, so it
 | Login | `POST /auth/login` | `POST /auth/school/login` (staff only: teacher and above; a student account is refused) |
 | Identity | An email, the validator enforces `.email()` | `schoolusername`, a ≤16-char alphanumeric handle |
 | Email on record | `lmsusername` **is** the email | **No email column exists on the table** |
-| Authorization | RBAC roles + permissions (below) | `schooluserrole` (student / teacher); a token carrying a non-staff role is refused on every request |
+| Authorization | RBAC roles + permissions (below) | `schooluserrole` (superadmin / admin / teacher / student); a school-user token whose role is not superadmin, admin or teacher is refused on every route that requires an access token |
 
 **Learners have no email, by design and by schema.** In the deployment contexts this platform is built for, a learner has a mobile phone; an email address is not a safe assumption. Staff and admins do have email. Any design that assumes otherwise (verification links, password-reset emails, "confirm your address") works for staff and is simply unavailable for learners.
 
@@ -179,7 +179,7 @@ All eleven remaining unguarded endpoints are legitimately public, and are listed
 
 `GET /curriculumbaseline/:curriculumbaselineid/download` had both its guard lines commented out. It streams `studentfirstname`, `schoolusername`, `schoolname` and each learner's assessment result. An anonymous `GET` returned **200** and a row reading `សុខា,khmz3y6dh,Demo Primary School,…`, demonstrated against a running stack, not inferred.
 
-**It is the clearest example in this codebase of an accident mistaken for a control.** The handler proxies to the student API, whose `AccessGuard` accepts a matching `SERVER_SYNC_KEY` as a bearer. The two apps fall back to *different* defaults, so locally the proxy 401s, the handler throws, and the endpoint 500s. It looks broken and therefore harmless. Setting that key correctly is a **required go-live step**, so the act of configuring the system properly is what arms the leak. Exactly the shape of `POST /auth/register`, which was safe only because it always 500'd.
+**It is the clearest example in this codebase of an accident mistaken for a control.** The handler proxies to the student API, which accepts a matching `SERVER_SYNC_KEY` on that route. The two apps fall back to *different* defaults, so locally the proxy 401s, the handler throws, and the endpoint 500s. It looks broken and therefore harmless. Setting that key correctly is a **required go-live step**, so the act of configuring the system properly is what arms the leak. Exactly the shape of `POST /auth/register`, which was safe only because it always 500'd.
 
 Now gated on `view_download_student` rather than a commented-out line. Anonymous 401, Teacher 403, Admin 200. Teacher holds `view_baseline-endline` but not `view_download_student`; the payload is learner identity data Teacher is deliberately denied. Verified live and locked in by [e2e authorization tests](https://github.com/edtech4good/edtech-lms-ui/tree/main/e2e/authorization).
 

@@ -9,7 +9,7 @@ This document describes **one subsystem only**: how **offline classroom activity
 
 It is written for **code review and comparison** with another LMS that also uses a Raspberry Pi edge node. For the full multi-repo map, see the [architecture documentation](/architecture/).
 
-**Status:** the central API's import side (`PUT /log/import`, section 6) is off by default — it only runs when a deployment sets `LOG_IMPORT_ENABLED`. Nothing in the current apps calls it: the native teacher app that drove this flow is retired, and the current Expo learner app does not implement the upload step. The rest of this page still documents the protocol both APIs implement, for the reasons above.
+**Status:** the central API's import side (`PUT /log/import`, section 6) is off by default — it only runs when a deployment sets `LOG_IMPORT_ENABLED` to `true` or `1`. Nothing in the current apps calls it: the native teacher app that drove this flow is retired, and the current Expo learner app does not call it. The rest of this page still documents the protocol both APIs implement, for the reasons above.
 
 ---
 
