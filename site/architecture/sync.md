@@ -9,6 +9,8 @@ This document describes **one subsystem only**: how **offline classroom activity
 
 It is written for **code review and comparison** with another LMS that also uses a Raspberry Pi edge node. For the full multi-repo map, see the [architecture documentation](/architecture/).
 
+**Status:** the central API's import side (`PUT /log/import`, section 6) is off by default — it only runs when a deployment sets `LOG_IMPORT_ENABLED` to `true` or `1`. Nothing in the current apps calls it: the native teacher app that drove this flow is retired, and the current Expo learner app does not call it. The rest of this page still documents the protocol both APIs implement, for the reasons above.
+
 ---
 
 ## 1. What problem this solves
@@ -108,6 +110,8 @@ Both Pi download and cloud upload use the same stored access token. Your deploym
 **Route:** `PUT /log/import`  
 **Controller:** [src/modules/log/log.controller.ts](https://github.com/edtech4good/edtech-lms-api/blob/main/src/modules/log/log.controller.ts)  
 **Guards:** `AccessGuard(TokenType.ACCESS)` and `CheckPermissionsGuard` (RBAC).
+
+**Availability:** off unless the deployment sets `LOG_IMPORT_ENABLED` (`true`/`1`); when off, the route 404s before auth or upload parsing runs.
 
 **Multipart:** field name **`importfile`** (ZIP buffer).
 

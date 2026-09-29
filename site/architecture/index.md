@@ -14,7 +14,7 @@ and a learner app built with Expo for Android, iOS and the web.
 
 | Repository | Role |
 |------------|------|
-| [edtech-lms-api](https://github.com/edtech4good/edtech-lms-api) | Central NestJS API. Schools, curriculum, users, object storage for media, `/sync/*` to package curriculum for a classroom server, `/log/import` to ingest a classroom activity log, JWT auth, and `POST /auth/school/login` for teacher and school login. |
+| [edtech-lms-api](https://github.com/edtech4good/edtech-lms-api) | Central NestJS API. Schools, curriculum, users, object storage for media, `/sync/*` to package curriculum for a classroom server, `/log/import` to ingest a classroom activity log (off by default), JWT auth, and `POST /auth/school/login` for teacher and staff login. |
 | [edtech-lms-ui](https://github.com/edtech4good/edtech-lms-ui) | Angular 21 admin, teacher and student web UI. Talks to the central API via `environment.API_URL`. |
 | [edtech-lms-rpi-api](https://github.com/edtech4good/edtech-lms-rpi-api) | Classroom NestJS API. Local MySQL, lessons, progress and quizzes, `GET /export/log`, `PUT /import/master` to receive a curriculum package, and student and teacher auth. |
 | [edtech-expo](https://github.com/edtech4good/edtech-expo) | Expo app (React Native and web). Two HTTP bases: `EXPO_PUBLIC_BASE_URL`, usually the classroom server, and `EXPO_PUBLIC_SYNC_URL`, usually the central API. |
@@ -134,11 +134,12 @@ one instance is built against `EXPO_PUBLIC_BASE_URL`, the other against
    `PUT`s it to the classroom server's `/import/master`, authenticated with
    `SERVER_SYNC_KEY`. See
    [sync.controller.ts](https://github.com/edtech4good/edtech-lms-api/blob/main/src/modules/sync/sync.controller.ts).
-3. Client-side path: the learner app downloads a zip from the central API's
-   `GET /sync/content`, then `PUT`s it to the classroom server's
-   `PUT /import/master`. The classroom API guards that route with AccessGuard
-   for an ADMIN, SUPERADMIN or TEACHER token, or an `Authorization` header
-   equal to the sync key. See
+3. Client-side path: a client can download a zip from the central API's
+   `GET /sync/content` and `PUT` it to the classroom server's
+   `PUT /import/master`; the current learner app does not call either. That
+   route always accepts the server sync key as the raw `Authorization`
+   header, and accepts an admin, superadmin or teacher token only when the
+   classroom server runs with `RPI_OFFLINE=true`. See
    [import.controller.ts](https://github.com/edtech4good/edtech-lms-rpi-api/blob/main/src/modules/import/import.controller.ts).
 
 ### B. Classroom to cloud: student and activity logs
@@ -146,16 +147,19 @@ one instance is built against `EXPO_PUBLIC_BASE_URL`, the other against
 1. On the classroom server, `GET /export/log` returns a zip of activity
    logs. See
    [export.controller.ts](https://github.com/edtech4good/edtech-lms-rpi-api/blob/main/src/modules/export/export.controller.ts).
-2. The learner app downloads that zip from the classroom server.
-3. The learner app uploads it to the central API's `PUT /log/import`. See
+2. A client can download that zip from the classroom server and upload it to
+   the central API's `PUT /log/import`. See
    [log.controller.ts](https://github.com/edtech4good/edtech-lms-api/blob/main/src/modules/log/log.controller.ts).
+   This upload route is off unless `LOG_IMPORT_ENABLED` is `true` or `1`, and
+   the current learner app does not call it.
 
 ### C. Teacher and student login
 
 - Students on the classroom server typically sign in with `POST /auth/login`
   against `EXPO_PUBLIC_BASE_URL`.
-- Teacher and school accounts typically sign in with
-  `POST /auth/school/login` against the central API, `EXPO_PUBLIC_SYNC_URL`.
+- Teachers and other staff sign in with `POST /auth/school/login` against
+  the central API, `EXPO_PUBLIC_SYNC_URL`. This login (and any school-user
+  token it issues) is for staff only; a student account is refused.
 
 ## Central API configuration for classroom integration
 
