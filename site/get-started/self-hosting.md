@@ -173,6 +173,10 @@ A few values need care:
 - `TRUST_PROXY=1` only makes sense behind Caddy, which this stack is. Don't
   set it if you ever run either API with nothing in front of it: a client
   could spoof `X-Forwarded-For` to dodge the rate limiter.
+- Leave `LOG_IMPORT_ENABLED` unset. It is off by default, which turns off
+  the central API's `PUT /log/import` (the classroom activity-log upload)
+  entirely. Set it to `true` only for a deployment with classroom Pis that
+  still uses that upload path.
 
 Both APIs run with `NODE_ENV=production` in this stack, and both **fail
 closed** on the placeholder secrets committed to their public repos: a

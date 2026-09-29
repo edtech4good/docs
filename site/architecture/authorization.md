@@ -16,10 +16,10 @@ This split matters for anything touching signup, verification or recovery, so it
 | | `lmsusers` | `schoolusers` |
 |---|---|---|
 | Who | Staff: admins, programme users | Learners, and teachers inside the app |
-| Login | `POST /auth/login` | `POST /auth/school/login` |
+| Login | `POST /auth/login` | `POST /auth/school/login` (staff only: teacher and above; a student account is refused) |
 | Identity | An email, the validator enforces `.email()` | `schoolusername`, a ≤16-char alphanumeric handle |
 | Email on record | `lmsusername` **is** the email | **No email column exists on the table** |
-| Authorization | RBAC roles + permissions (below) | `schooluserrole` (student / teacher) |
+| Authorization | RBAC roles + permissions (below) | `schooluserrole` (student / teacher); a token carrying a non-staff role is refused on every request |
 
 **Learners have no email, by design and by schema.** In the deployment contexts this platform is built for, a learner has a mobile phone; an email address is not a safe assumption. Staff and admins do have email. Any design that assumes otherwise (verification links, password-reset emails, "confirm your address") works for staff and is simply unavailable for learners.
 
