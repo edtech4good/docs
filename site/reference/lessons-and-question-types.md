@@ -50,9 +50,19 @@ If the curriculum assumes a learner watches, then practices, then tests, that or
 
 A lesson is worth `total_points` (100 on current content): learning 20, practice 40, quiz 40. Points are awarded for doing an activity, not for scoring well on it: a submitted quiz earns its 40 whether the learner got 3 of 10 or 10 of 10 (the score is stored separately as pass/fail at 80%). Learning points are awarded only when a video has been watched. Lessons whose learning item is a document (as in document-based curriculum) top out at 80 points, which is exactly the pass mark. This is why an earlier rule that required "more than 80%" left such lessons permanently incomplete. Whether documents should earn learning points is an open product decision.
 
-The level and grade rollups still use a rule of "more than 80%".
+The level and grade rollups use the same "at least 80%" rule: a level counts as completed when the learner's points reach 80% of the level's points, and a grade the same way against the grade's points.
 
 **Marking happens on the tablet.** Each answer is judged right or wrong on the device, and the result travels up as a verdict. The server stores what it is told and never checks the answer itself. That suits tablets which spend the day off the network. It does mean every percentage in the progress tables is a figure the app reported about itself. Worth knowing if those numbers ever reach a donor report.
+
+### How a level and a grade are worth points
+
+A learner's progress through a level or a grade is their points divided by the points the level or grade is worth, so those totals decide what 100% means. Central works them out whenever content changes, and the same rule applies to content imported by script and content edited in the admin:
+
+- **A level's points** are the sum of `total_points` of its lessons that are switched on and not deleted, plus the level's `quiz_points` only when the level has at least one active level-quiz question. A level without a level quiz is not worth its quiz points.
+- **A grade's points** are the sum of the points of its levels that are switched on and not deleted.
+- Central recomputes after any change that can move the totals: creating, editing, moving, deleting, switching on or off a lesson or a level, and changing a level's quiz questions.
+
+Stored points change only at the next recompute of that level or grade. Nothing rewrites existing totals when the rule is deployed, so a level that already held quiz points but has no active level-quiz question loses them the next time it is recomputed, and learners' progress on it can rise.
 
 ## Built, but not ready to hand to authors
 

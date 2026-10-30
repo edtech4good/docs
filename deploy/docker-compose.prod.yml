@@ -81,6 +81,9 @@ services:
         EXPO_PUBLIC_BASE_URL: ${EXPO_PUBLIC_BASE_URL}
         EXPO_PUBLIC_RESOURCE_URL: ${EXPO_PUBLIC_RESOURCE_URL}
         EXPO_PUBLIC_RESOURCE_PATH: ${EXPO_PUBLIC_RESOURCE_PATH}
+        # `corporate` selects the corporate theme before sign-in; anything else,
+        # including unset, gives the kids theme.
+        EXPO_PUBLIC_DEFAULT_THEME: ${EXPO_PUBLIC_DEFAULT_THEME:-}
     restart: unless-stopped
     expose: ["80"]
 
@@ -89,6 +92,10 @@ services:
     image: mysql:8.0
     profiles: ["with-db"]
     restart: unless-stopped
+    # On a small host with no swap, an image build's memory peak can make the
+    # kernel's out-of-memory killer pick mysqld. -1000 takes MySQL out of its
+    # choice, so a build step dies instead of the database.
+    oom_score_adj: -1000
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     command:

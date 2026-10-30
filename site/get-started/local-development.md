@@ -193,6 +193,11 @@ AWS S3 and SMTP variables are also in `env.example`. Neither is required to
 start the app or to sign in. Without S3 configured, some media upload and
 media URL features won't work; without SMTP, the app just won't send email.
 
+The route that ingests a classroom activity log, `PUT /log/import`, is off by
+default: it answers 404 unless `LOG_IMPORT_ENABLED` is `true` or `1`. Nothing
+in the current apps calls it, so most local work doesn't need it. Set it only
+when you are testing that route directly.
+
 Run migrations, then start the app:
 
 ```bash
@@ -219,34 +224,10 @@ ALLOW_LOCAL_DEV_SEED=true npm run seed:local
 ALLOW_DEMO_SEED=true npm run seed:demo
 ```
 
-::: warning
-On the current main branch, the local superadmin seed writes a password hash
-that the login check no longer accepts, so from a fresh seed no account can
-sign in to the admin UI. Until the seed is fixed, set the superadmin
-password directly with the API's own hashing function instead. Run these in
-the same terminal, still inside `edtech-lms-api`, because the `HASH`
-variable only exists in the shell that sets it:
-:::
-
-```bash
-npm run build
-```
-
-```bash
-HASH=$(node -e 'console.log(require("./build/services/password.service").hashPassword(process.argv[1]))' 'ChooseAPassword1')
-```
-
-```bash
-docker exec -i edtech-mysql mysql -uroot -pedtech_root_dev edtech_lms -e "UPDATE lmsusers SET lmsuserpasswordhash='$HASH' WHERE lmsuserid='5ec8814c-4390-40e3-8d93-828adca9aa08';"
-```
-
-This builds the API, computes a bcrypt hash the same way the API itself
-does, and writes it straight into the local Docker MySQL container onto the
-fixed superadmin row the migrations create. If you run your own MySQL
-instead of the Docker container, run the same `UPDATE` with your own
-`mysql` client as any user with write access to `edtech_lms`. Sign in to the admin UI at
-`http://localhost:4200` with `superadmin@superadmin.com` and the password
-you chose above.
+`seed:local` sets the superadmin's password to a known value (see
+[Users and data](#users-and-data) below) and creates two organisations that
+the other seeds put their rows in. Sign in to the admin UI at
+`http://localhost:4200` with `superadmin@superadmin.com` and that password.
 
 ## Classroom API
 
@@ -346,8 +327,7 @@ npm start
 ```
 
 Open `http://localhost:4200` and sign in as the superadmin, using the
-password you set with the workaround under [Central API](#central-api)
-above.
+password that `seed:local` set (see [Users and data](#users-and-data)).
 
 ## Learner app for web
 
@@ -408,15 +388,14 @@ A typical first run, in order:
    report healthy.
 2. Central API: install, migrate, seed, start (port 3000).
 3. Admin UI: install, start (port 4200). Optional, but the fastest way to
-   create schools and curriculum once you've applied the superadmin
-   password workaround above.
+   create schools and curriculum once `seed:local` has given you a
+   superadmin password.
 4. Classroom API: install, migrate, seed (both `seed:demo` and
    `seed:content`), start (port 3001).
 5. Learner app: install, start, press `w` for web.
 
 You can skip the admin UI and use Swagger on
-`http://localhost:3000/docs` instead for admin
-actions without needing the password workaround, but the UI is usually
+`http://localhost:3000/docs` instead for admin actions, but the UI is usually
 faster once you're doing more than a couple of API calls.
 
 ## Users and data
@@ -429,14 +408,17 @@ password nobody knows. `ALLOW_LOCAL_DEV_SEED=true npm run seed:local` (from
 - Password: `LocalDev_Superadmin1`
 
 Override the password with `SUPERADMIN_PASSWORD='something-else'` on the
-same command. This seed only ever touches that one account, and it refuses
-to run at all unless `ALLOW_LOCAL_DEV_SEED=true` is set explicitly, so it
-can't be run against a real deployment by accident.
+same command. It refuses to run at all unless `ALLOW_LOCAL_DEV_SEED=true` is
+set explicitly, so it can't be run against a real deployment by accident.
+The password is stored the way the API's own sign-in check expects
+(a bcrypt hash of the MD5 digest), so the account signs in as soon as the
+seed finishes.
 
-::: warning
-See the workaround under [Central API](#central-api) above: this seed alone
-does not currently produce a password the admin UI will accept.
-:::
+Besides setting that password, the seed creates two organisations, each linked
+to Cambodia, for the other seeds to put their rows in. The superadmin belongs
+to neither: it is the platform's own account, which sees every organisation
+(see [Organisations](/architecture/organisations)). The demo seeds create
+the organisation they need themselves, so the seeds can run in any order.
 
 **Central API demo content.** `ALLOW_DEMO_SEED=true npm run seed:demo` (from
 `edtech-lms-api`) creates one small vertical slice of content: a country, a

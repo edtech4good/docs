@@ -13,12 +13,16 @@ WORKDIR /app
 # EXPO_PUBLIC_BASE_URL    -> the STUDENT API origin (this is what the app calls)
 # EXPO_PUBLIC_RESOURCE_URL -> the base URL for curriculum media (e.g., S3/CDN or /media)
 # EXPO_PUBLIC_RESOURCE_PATH -> the path segment joined between URL and filename
+# EXPO_PUBLIC_DEFAULT_THEME -> `corporate` selects the corporate theme before sign-in;
+#                              anything else, including unset, gives the kids theme
 ARG EXPO_PUBLIC_BASE_URL
 ARG EXPO_PUBLIC_RESOURCE_URL
 ARG EXPO_PUBLIC_RESOURCE_PATH
+ARG EXPO_PUBLIC_DEFAULT_THEME
 ENV EXPO_PUBLIC_BASE_URL=${EXPO_PUBLIC_BASE_URL}
 ENV EXPO_PUBLIC_RESOURCE_URL=${EXPO_PUBLIC_RESOURCE_URL}
 ENV EXPO_PUBLIC_RESOURCE_PATH=${EXPO_PUBLIC_RESOURCE_PATH}
+ENV EXPO_PUBLIC_DEFAULT_THEME=${EXPO_PUBLIC_DEFAULT_THEME}
 # yarn, not npm: edtech-expo standardized on yarn and gitignores
 # package-lock.json, so `npm ci` has no lockfile and fails. yarn's
 # frozen lockfile also keeps this image's dependency tree identical to dev
