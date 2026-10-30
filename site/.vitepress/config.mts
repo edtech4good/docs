@@ -25,6 +25,7 @@ export default defineConfig({
       },
       outline: [2, 3],
       nav: [
+        { text: 'Admin guide', link: '/admin-guide/' },
         { text: 'Get started', link: '/get-started/' },
         { text: 'Architecture', link: '/architecture/' },
         { text: 'Reference', link: '/reference/lessons-and-question-types' },
@@ -32,6 +33,16 @@ export default defineConfig({
         { text: 'About', link: '/about/history' }
       ],
       sidebar: [
+        {
+          text: 'Admin guide',
+          items: [
+            { text: 'Overview', link: '/admin-guide/' },
+            { text: 'Signing in and finding your way', link: '/admin-guide/signing-in' },
+            { text: 'Add learners and teachers', link: '/admin-guide/learners-and-teachers' },
+            { text: 'Publish and sync', link: '/admin-guide/publish-and-sync' },
+            { text: 'When something is refused', link: '/admin-guide/when-something-is-refused' }
+          ]
+        },
         {
           text: 'Get started',
           items: [

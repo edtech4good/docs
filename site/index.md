@@ -10,6 +10,9 @@ hero:
       text: "Get started"
       link: "/get-started/"
     - theme: alt
+      text: "Using the admin"
+      link: "/admin-guide/"
+    - theme: alt
       text: "Architecture"
       link: "/architecture/"
     - theme: alt
