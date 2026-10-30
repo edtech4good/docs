@@ -44,6 +44,14 @@ export. A 2 GB host can run the stack but may run out of memory while
 building it. On a small host, build one image at a time rather than letting
 Compose build all four in parallel (see Bring the stack up below).
 
+If MySQL runs on the same small host (the `with-db` profile), a build's memory
+peak can make the kernel's out-of-memory killer choose `mysqld`. The kit sets
+`oom_score_adj: -1000` on that container, which takes it out of the killer's
+choice so a build step dies instead of the database. A small swapfile on the
+host helps for the same reason. After any deploy on a small host, check
+`dmesg` for out-of-memory kills rather than trusting that the containers are
+up.
+
 ## Prerequisites
 
 - A Linux host with Docker and Compose v2 installed.
@@ -113,8 +121,12 @@ separate from the learner app's curriculum media.
 static bundle at build time. These come from `.env.production` as Compose
 build args: `EXPO_PUBLIC_BASE_URL` (the student API origin), and
 `EXPO_PUBLIC_RESOURCE_URL` and `EXPO_PUBLIC_RESOURCE_PATH` (together they
-locate curriculum media; see Media below). No file to edit, just rebuild
-`expo-web` after changing them.
+locate curriculum media; see Media below). `EXPO_PUBLIC_DEFAULT_THEME` is the
+theme the web app shows before anyone signs in: `corporate` selects the
+corporate theme, and blank or anything else gives the kids theme. After
+sign-in the organisation's own theme applies, so set it to match your
+organisations or learners will see the wrong look on the sign-in screen. No
+file to edit, just rebuild `expo-web` after changing them.
 
 This kit does not set `EXPO_PUBLIC_SYNC_URL` for the learner web app, so its
 school and teacher login and its content-sync paths are not configured;
@@ -357,6 +369,48 @@ docker compose -f docker-compose.prod.yml --env-file .env.production logs -f
 ```
 
 Rebuild one service at a time on a small host, as with first bring-up.
+
+Two rules for a release that changes what the content sync carries (a new
+table or key in the payload, as the translations and learning-item changes
+did). The student API's import is strict: it refuses a payload with a key it
+does not know and one missing a key it requires, in both directions. Deploy the
+student API first, then central, and do not run Sync Content between the two.
+And when you upgrade a deployment that already has curricula to a version with
+[publishing](/architecture/publishing), publish them once before the first sync,
+or the first sync will serve every organisation as empty and its learners will
+lose their content:
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.production \
+  run --rm central-api npm run publish:initial -- --all --dry-run
+docker compose -f docker-compose.prod.yml --env-file .env.production \
+  run --rm central-api npm run publish:initial -- --all
+```
+
+The dry run builds and checks everything and writes nothing; it reports any
+organisation it would refuse. A new deployment has nothing to publish.
+
+## Operating notes
+
+- **Pass `--env-file` on every Compose command, in every script.** Compose
+  reads `.env.production` for its own `${...}` interpolations only when you
+  name it; the containers read it through `env_file`, which is a different
+  mechanism. A plain `docker compose up -d` from a script that has not
+  loaded the file interpolates blanks: a MySQL container can be recreated with
+  a blank root password and still report healthy, because `mysqladmin ping`
+  ignores authentication. After any Compose action that touches a stateful
+  container, read a count from the database instead of trusting `docker ps`.
+- **A script that prompts needs a terminal.** Run it with `ssh -t host script`,
+  and start it with a check such as `[ -t 0 ] || { echo "run with ssh -t"; exit 1; }`.
+  Without a terminal, `read -rsp` waits silently for input that never arrives.
+- **Do not put a value containing `$` inside a nested `sh -c "..."`.** The inner
+  shell expands `$2b` and `$10` in a bcrypt hash, and a shortened string is
+  stored instead of the hash. Pass such values through an environment variable
+  as the First login step does, or through a temporary file created with
+  `umask 077` and removed afterwards.
+- **Verify a credential reset by reading it back.** An `UPDATE` that reports a
+  row changed is satisfied by a wrong value. Read `lmsuserpasswordhash` back and
+  check that it is 60 characters and starts with `$2`, then sign in.
 Migrate again after every update even if nothing schema-related changed. A
 migration run is a no-op when there's nothing new, and skipping it is how a
 stack quietly drifts from what its code expects.

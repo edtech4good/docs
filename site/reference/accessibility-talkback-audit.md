@@ -272,6 +272,22 @@ This confirms TalkBack is actively requesting accessibility-scoped audio focus a
 | F-16 | 1. Login | The two Login text fields have no `accessibilityLabel` and rely on placeholder text; the default layout hardcodes English placeholders instead of a translated string; TalkBack reads a placeholder as the field's hint only while the field is empty. | Minor | `LoginScreen.tsx:229,235`, `AppTextField.tsx:238-255` | Add `accessibilityLabel` via `t('screen.login.emailPlaceholder')` / `t('screen.login.passwordPlaceholder')` (the existing km.json keys) on the AppTextField / CustomInput components. | 0.1d |
 | F-17 | Code hygiene, not observed on device | 15+ `Image`/`ResourceImage` uses lack the `accessible` prop set to `false` (decorative logos, hero image, VideoControl button images, NavRail logo/avatar). React Native images are not focusable on Android unless made accessible, which is why the device audit found decorative images correctly hidden from the tree; the gap matters on iOS and for any future change to these components. **Not observable on Android with this audit's method**; flagged from the static scan only. | Minor | `LoginScreen.tsx`, `LevelSelectionScreen.tsx`, `VideoControl.tsx`, `NavRail.tsx` | Add `accessible={false}` to each decorative `Image`. | 0.5d |
 
+### Status since the audit
+
+The audit above is the original finding set. Six of the seventeen findings have since been fixed in the learner app (repository [edtech-expo](https://github.com/edtech4good/edtech-expo)). The checks were made on an Android 13 emulator with a debug build and release builds, from `uiautomator` dumps and screenshots. **No TalkBack listening pass has been run on any fix**, so these confirm the accessibility tree TalkBack reads, not what it says.
+
+| ID | Status | Change |
+|---|---|---|
+| F-01 | Fixed in code; tree and behaviour checked on a device | [#83](https://github.com/edtech4good/edtech-expo/pull/83). Android now renders the control bar the player already had, instead of only the close button. The lesson screen was already passing it working handlers for play and pause, seek, forward, rewind and volume; they had been discarded by an early return. Each control carries a Khmer `accessibilityLabel`, and the scrubber reports elapsed time of total through `accessibilityValue`. On a device the video screen exposes six labelled controls where the audit found three nodes. The controls no longer hide on a timer on Android, because controls a screen reader can find should not vanish. |
+| F-02 | Fixed; checked on a device | [#82](https://github.com/edtech4good/edtech-expo/pull/82). Both close buttons have an accessible name (`បិទ`, Close). |
+| F-03 | Closed | Already fixed by [#34](https://github.com/edtech4good/edtech-expo/pull/34): the Practice and Quiz screens use a back button with an accessible name. |
+| F-05 | Fixed; label checked on a device | [#88](https://github.com/edtech4good/edtech-expo/pull/88). A lesson row now reads its status and each step's state. The step states are *estimated* from one aggregate percentage, because the API has no per-step data, so the label is faithful to what the screen shows and not to per-step truth. |
+| F-06, F-12 | Fixed; checked on a device | [#87](https://github.com/edtech4good/edtech-expo/pull/87). The learner stack renders the app's own labelled back button on Android, because the navigation library cannot relabel the stock one there. |
+
+Checking the player turned up four things that were not part of the audit, all fixed in [#86](https://github.com/edtech4good/edtech-expo/pull/86): elapsed time and the scrubber did not advance during playback on Android (the video library lost its progress interval when the source changed), play did nothing at the end of a clip, the volume slider was about 89 px wide and sat mostly behind the rewind button on a phone, and the "resume from your previous session?" prompt was in English in a Khmer interface.
+
+Still open: F-04 and F-07 to F-11, F-13 to F-17; a TalkBack listening pass over F-01, F-02, F-05 and F-12; native-speaker review of the Khmer strings that were added (the player labels, the resume prompt and the step states are provisional); and iOS, which has never been built or audited.
+
 Effort is an estimate in developer-days for remediation only (excludes the physical-device listening pass owed by F-10/F-13/the Method section).
 
 Total ≈ 5.4 developer-days for all 17 items; ≈ 3.5 developer-days for the Blocker + Major set (F-01–F-07).
