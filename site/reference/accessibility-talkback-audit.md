@@ -10,7 +10,7 @@ Date: 2026-09-15
 ## Method
 
 - Device: Android Studio emulator `emulator-5554`, Pixel 7 profile, Android 13 (API 33), 1080×2400 px, 420 dpi (2.625 px/dp).
-- App under test: the learner app (`edtech-expo`), development build, versionName `1.0.0` (release build, already installed). Talks to a test backend over the internet; no local servers involved.
+- App under test: the learner app (`edtech-expo`), versionName `1.0.0` (release build, already installed). Talks to a test backend over the internet; no local servers involved.
 - Screen reader: TalkBack versionName `14.2.0.618048417`. Touch exploration confirmed throughout. Left enabled at the end of the session.
 - TTS: system TTS engine (`com.google.android.tts`) with `tts_default_locale` = `khm-KHM`. Confirmed live via logcat during the audit; see "TTS evidence" below.
 - App UI language: Khmer (default), with a language toggle also exercised.
