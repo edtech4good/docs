@@ -58,8 +58,8 @@ Three examples:
 
 **A green suite after a fix says nothing about concurrency, and a fix can itself be the defect.** Two examples from one publishing change:
 
-- A review said a publish read its content before it took the row lock, so a concurrent publish could be recorded on stale data. The fix moved the reads inside the transaction. Six publishes in parallel then waited behind the lock the transaction held, exhausted the five-connection pool, took 50 seconds, and four of the six failed with a lock-wait timeout (the control with the reads moved back finished in 0.2 s). The final fix kept the reads before the transaction and added a guard after the lock.
-- The next fix checked the row's owner with a read before an upsert. In MySQL's default `REPEATABLE READ` isolation, the first plain `SELECT` in a transaction fixes the snapshot every later plain read sees. When a concurrent identical save won, the read-back saw nothing and answered 500 in 27 of 30 rounds (0 of 30 before the "fix"). The shape that held in 60 rounds: no pre-read, write with `ON DUPLICATE KEY UPDATE`, read back with `SELECT ... FOR UPDATE` (which reads the latest committed row), and refuse and roll back if the stored row belongs to someone else.
+- A review said a publish read its content before it took the row lock, so a concurrent publish could be recorded on stale data. The fix moved the reads inside the transaction. Six publishes in parallel then waited behind the lock the transaction held, exhausted Sequelize's default pool of five connections, and four of the six failed with a lock-wait timeout. The final fix kept the reads before the transaction and added a guard after the lock.
+- The next fix checked the row's owner with a read before an upsert. In MySQL's default `REPEATABLE READ` isolation, the first plain `SELECT` in a transaction fixes the snapshot every later plain read sees. When a concurrent identical save won, the read-back saw nothing and answered 500 in most rounds (it never had before the "fix"). The shape that held under repeated parallel runs: no pre-read, write with `ON DUPLICATE KEY UPDATE`, read back with `SELECT ... FOR UPDATE` (which reads the latest committed row), and refuse and roll back if the stored row belongs to someone else.
 
 So: re-run the parallel and the identical-request cases after every fix that touches transactions, locks or pools; make a mutation that fails on the old shape; and remember that an in-memory fake database cannot express lock order or isolation. Prove these with a live parallel run, and say so when a spec cannot.
 
@@ -79,9 +79,9 @@ So: re-run the parallel and the identical-request cases after every fix that tou
 
 ## Scratch databases, ports and disk
 
-**Name the scratch database and the port in every task description, and never share them between concurrent runs.** Two runs assigned the same scratch databases and ports would each read the other's rows as their own and report counts nothing can reproduce. A run that finds its port taken should wait, not take another. If a slip is found, ask the first run to check its counts for disturbance rather than assuming nothing happened.
+**Use a separate scratch database and port for each concurrent test run.**
 
-**Proof copies fill the disk.** Every proof copy with its own `node_modules` is gigabytes. Dozens of them, with build output (`dist`, `build`, `.angular`), grew to 58 GB and left a development machine with no free space, which killed Docker's VM and with it the local MySQL. Strip `node_modules` and build output from each copy when its run ends, keep the sources and reports, and check `df -h /` next to the memory check before starting several runs.
+**Proof copies fill the disk.** Strip `node_modules` and build output from proof copies; check `df -h /`.
 
 ## Count from compiled code or the database
 

@@ -74,8 +74,9 @@ reads that as `video`.
 
 ## Rules for every future type
 
-These are the design rules for adding a type. Rules 1 and 4 are enforced in code
-today; the others bind the types that are still to come.
+These are the design rules for adding a type. Rule 1 is enforced; for rule 4, central
+checks that a body carries an integer `v` and is at most 64 KiB. The others bind
+the types that are still to come.
 
 1. **A type nobody knows is refused, not guessed.**
 2. **Everything an item shows offline is a document in the payload.** No live

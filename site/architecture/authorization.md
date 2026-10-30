@@ -130,7 +130,7 @@ Why the line sits at identity rather than at "student data", measured, because t
 
 | Teacher calls | Result | Returns |
 |---|---|---|
-| `POST /report/studentstatus` | 200 | learner **username** (`demo.sophea`), school, class, progress |
+| `POST /report/studentstatus` | 200 | learner **username**, school, class, progress |
 | `GET /report/disability` | 200 | **aggregated counts only** (`not collected: 5`), no per-learner rows |
 | `GET /student/all` | **403** | `studentfirstname`/`studentlastname`, `mothername`, `fathername`, `dateofbirth`, `contact`, and all six `wg_*` disability answers |
 

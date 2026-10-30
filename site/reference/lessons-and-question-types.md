@@ -58,7 +58,7 @@ The level and grade rollups use the same "at least 80%" rule: a level counts as 
 
 A learner's progress through a level or a grade is their points divided by the points the level or grade is worth, so those totals decide what 100% means. Central works them out whenever content changes, and the same rule applies to content imported by script and content edited in the admin:
 
-- **A level's points** are the sum of `total_points` of its lessons that are switched on and not deleted, plus the level's `quiz_points` only when the level has at least one active level-quiz question. A level without a level quiz is not worth its quiz points, because a learner can only earn them through that quiz.
+- **A level's points** are the sum of `total_points` of its lessons that are switched on and not deleted, plus the level's `quiz_points` only when the level has at least one active level-quiz question. A level without a level quiz is not worth its quiz points.
 - **A grade's points** are the sum of the points of its levels that are switched on and not deleted.
 - Central recomputes after any change that can move the totals: creating, editing, moving, deleting, switching on or off a lesson or a level, and changing a level's quiz questions.
 

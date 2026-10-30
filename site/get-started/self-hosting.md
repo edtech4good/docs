@@ -370,6 +370,10 @@ docker compose -f docker-compose.prod.yml --env-file .env.production logs -f
 
 Rebuild one service at a time on a small host, as with first bring-up.
 
+Migrate again after every update even if nothing schema-related changed. A
+migration run is a no-op when there's nothing new, and skipping it is how a
+stack quietly drifts from what its code expects.
+
 Two rules for a release that changes what the content sync carries (a new
 table or key in the payload, as the translations and learning-item changes
 did). The student API's import is strict: it refuses a payload with a key it
@@ -396,13 +400,10 @@ organisation it would refuse. A new deployment has nothing to publish.
   reads `.env.production` for its own `${...}` interpolations only when you
   name it; the containers read it through `env_file`, which is a different
   mechanism. A plain `docker compose up -d` from a script that has not
-  loaded the file interpolates blanks: a MySQL container can be recreated with
-  a blank root password and still report healthy, because `mysqladmin ping`
-  ignores authentication. After any Compose action that touches a stateful
+  loaded the file recreates containers with blank interpolated values, and
+  the MySQL healthcheck still reports healthy because `mysqladmin ping`
+  succeeds even when authentication fails. After any Compose action that touches a stateful
   container, read a count from the database instead of trusting `docker ps`.
-- **A script that prompts needs a terminal.** Run it with `ssh -t host script`,
-  and start it with a check such as `[ -t 0 ] || { echo "run with ssh -t"; exit 1; }`.
-  Without a terminal, `read -rsp` waits silently for input that never arrives.
 - **Do not put a value containing `$` inside a nested `sh -c "..."`.** The inner
   shell expands `$2b` and `$10` in a bcrypt hash, and a shortened string is
   stored instead of the hash. Pass such values through an environment variable
@@ -411,9 +412,6 @@ organisation it would refuse. A new deployment has nothing to publish.
 - **Verify a credential reset by reading it back.** An `UPDATE` that reports a
   row changed is satisfied by a wrong value. Read `lmsuserpasswordhash` back and
   check that it is 60 characters and starts with `$2`, then sign in.
-Migrate again after every update even if nothing schema-related changed. A
-migration run is a no-op when there's nothing new, and skipping it is how a
-stack quietly drifts from what its code expects.
 
 ## Not covered here
 

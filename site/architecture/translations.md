@@ -100,7 +100,8 @@ Translations are content rows, so they travel with the content.
 
 ## Authoring
 
-Central exposes `GET`, `PUT` and `DELETE /translations/:tablename/:rowid`. A save
+Central exposes `GET /translations/:tablename/:rowid`, `PUT /translations/:tablename/:rowid` and
+`DELETE /translations/:tablename/:rowid/:language`. A save
 sends the language and a map of field to text, central computes the hash,
 refuses answer-bearing fields, and requires the permission and ownership of the
 parent entity. The admin has a Translations drawer on the curriculum, grade,
