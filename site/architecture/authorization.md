@@ -63,10 +63,15 @@ The API-key branch returns `{ user: "API KEY" }` with **no permissions**, so add
 
 | Role | Permissions | Shape |
 |---|---|---|
-| Super Admin | 190 | Every row; earns the `superadmin` wildcard |
-| Admin | 159 | Everything except user and role administration |
+| Super Admin | 190 when granted | Every row; earns the `superadmin` wildcard. Permissions added later are granted to it in the same migration, so it keeps the wildcard (see below) |
+| Admin | 159 when granted | Everything except user and role administration; also holds `publish_curriculum` |
+| Organisation Admin | 154 when added | The account that runs one organisation: most of what Admin holds, minus actions that are platform-wide by design, plus staff administration confined to its own organisation |
 | Teacher | 60 | Read-only (`view_*`, `download_*`), minus learner identity |
 | User / API Key | **0** | Unchanged, no consumer |
+
+The counts are the figures at the time each role was granted; the sections below tell the July story with July's figure of 190. Since then four organisation permissions (`view_`, `create_`, `update_` and `delete_organisation`) were added and granted to Super Admin only, and a `publish_curriculum` permission was added for [publishing](/architecture/publishing). The seed migrations no longer read the live permission enum: they use frozen lists, so a permission added later cannot change what a fresh database grants a role.
+
+**Organisation Admin** exists because a role that holds `create_user` or `update_user` *is* Super Admin, as the next section explains, unless the API also confines what the holder may touch. For this role it does: staff administration is limited to the caller's own [organisation](/architecture/organisations), and the roles and accounts the caller may bind or change are bounded. Its permission list is frozen in its migration.
 
 The seed used to grant everything to Super Admin and nothing to anything else, which was survivable only while `lmsuserrole` lied: an Admin-role account reached every roles-guarded endpoint regardless of its zero permissions. Once the guard started reading real roles, Admin was correctly refused, and, holding nothing, could do nothing at all. A migration grants the two roles real permissions.
 

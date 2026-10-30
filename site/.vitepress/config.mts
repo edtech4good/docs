@@ -44,6 +44,10 @@ export default defineConfig({
           text: 'Architecture',
           items: [
             { text: 'Overview', link: '/architecture/' },
+            { text: 'Organisations', link: '/architecture/organisations' },
+            { text: 'Publishing', link: '/architecture/publishing' },
+            { text: 'Two languages in content', link: '/architecture/translations' },
+            { text: 'Learning items', link: '/architecture/learning-items' },
             { text: 'Classroom to cloud sync', link: '/architecture/sync' },
             { text: 'Authorization model', link: '/architecture/authorization' },
             { text: 'Object storage', link: '/architecture/storage' }

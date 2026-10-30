@@ -22,6 +22,23 @@ and a learner app built with Expo for Android, iOS and the web.
 A legacy native Android app and a duplicate reporting UI were retired and are
 not part of the current stack.
 
+## How content is organised
+
+The four repositories share one content model. Four pages describe it:
+
+- [Organisations](/architecture/organisations). Several organisations share one
+  central deployment and one student deployment. Every school, learner and piece
+  of content belongs to exactly one, and a platform user can either see all of
+  them or act as one.
+- [Publishing](/architecture/publishing). An edit on the central API stays a
+  draft until its curriculum is published. A publication is a snapshot, and the
+  sync routes serve the snapshots, not the live rows.
+- [Two languages in content](/architecture/translations). Text is stored once,
+  in the organisation's content language, with translations beside it that go
+  stale when the source text changes.
+- [Learning items](/architecture/learning-items). The learning part of a lesson
+  is an ordered list of typed items, of which `video` is the only type so far.
+
 ## End-to-end diagram
 
 <svg class="arch-diagram" viewBox="0 0 900 420" width="100%" style="max-width:900px;height:auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="edtech-lms-ui and edtech-lms-api and object storage sit in an online central group on the left, connected by sync and login calls to edtech-lms-rpi-api and tablets or web clients in a classroom LAN group on the right.">
@@ -129,7 +146,9 @@ one instance is built against `EXPO_PUBLIC_BASE_URL`, the other against
 
 ### A. Cloud to classroom: curriculum and master content
 
-1. An admin on the central UI prepares content.
+1. An admin on the central UI prepares content, then publishes the curriculum
+   (see [publishing](/architecture/publishing)). Only published content is
+   synced.
 2. Server-side push: the central API's `POST /sync/cloud` builds a zip and
    `PUT`s it to the classroom server's `/import/master`, authenticated with
    `SERVER_SYNC_KEY`. See
@@ -182,6 +201,10 @@ configuration.
 
 ## See also
 
+- [Organisations](/architecture/organisations)
+- [Publishing](/architecture/publishing)
+- [Two languages in content](/architecture/translations)
+- [Learning items](/architecture/learning-items)
 - [Classroom to cloud sync](/architecture/sync)
 - [Authorization model](/architecture/authorization)
 - [Object storage](/architecture/storage)
