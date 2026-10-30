@@ -107,9 +107,10 @@ npm run publish:initial -- --all
 ```
 
 It works per organisation, all or nothing, skips curricula that already have a
-publication, reports any organisation it refuses, and accepts `--organisation
-<id>` to do one organisation and `--as <lmsuserid>` to name the publishing user.
-Without it, the first sync after upgrade would empty the learner side.
+publication, and reports any organisation it refuses. Pass `--organisation ID`
+instead of `--all` to do one organisation, and `--as USERID` to name the
+publishing user. Without this step, the first sync after an upgrade would empty
+the learner side.
 
 ### The student side
 
