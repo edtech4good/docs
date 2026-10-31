@@ -280,6 +280,17 @@ try {
   await page.waitForTimeout(600);
   await shot(page, 'schools-list.png', 'schools list', { x: 272, y: 20, width: 1008, height: 460 });
 
+  // Sync Students, as the Organisation Admin sees it on its own school's row, with the confirmation open (it is cancelled,
+  // not run). The Organisation Admin and Admin roles hold sync_students, so the button is there without any switcher.
+  const schoolRow = page.locator('tr', { hasText: cfg.school });
+  await schoolRow.getByText('Sync Students').waitFor();
+  await schoolRow.getByText('Sync Students').click();
+  await page.locator('.ant-popover').waitFor();
+  await page.waitForTimeout(400);
+  await shot(page, 'sync-students.png', 'schools list with Sync Students', { x: 272, y: 20, width: 1008, height: 330 });
+  await page.locator('.ant-popover button', { hasText: 'Cancel' }).click();
+  await page.waitForTimeout(300);
+
   await page.goto(`${cfg.admin}/school/create`);
   await page.locator('input[formcontrolname=schoolname]').fill('Example Day School');
   await pick(page, 'Country', 'Cambodia');
@@ -392,17 +403,6 @@ try {
   await shot(pp, 'org-switcher.png', 'organisation switcher', { x: 0, y: 70, width: 400, height: 290 });
   await pp.locator('.row', { hasText: cfg.org }).click();
   await pp.waitForTimeout(1800);
-
-  // Sync Students, with the confirmation open (it is cancelled, not run)
-  await pp.goto(`${cfg.admin}/school/index`);
-  const schoolRow = pp.locator('tr', { hasText: cfg.school });
-  await schoolRow.getByText('Sync Students').waitFor();
-  await pp.waitForTimeout(500);
-  await schoolRow.getByText('Sync Students').click();
-  await pp.locator('.ant-popover').waitFor();
-  await pp.waitForTimeout(400);
-  await shot(pp, 'sync-students.png', 'schools list with Sync Students', { x: 272, y: 20, width: 1008, height: 330 });
-  await pp.locator('.ant-popover button', { hasText: 'Cancel' }).click();
   await plat.context.close();
 } catch (err) {
   console.error(String(err?.stack ?? err));
