@@ -5,7 +5,7 @@ description: How to create and edit the schools, classes, subjects and tags your
 
 # Set up your organisation
 
-*Written for the admin as of [`edtech-lms-ui` 183b4ac](https://github.com/edtech4good/edtech-lms-ui/commit/183b4ac), checked on 30 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
 
 Before you add a single learner, a handful of records have to exist: the
 **schools**, the **classes** in them, the **countries** and **curricula** those
@@ -44,7 +44,7 @@ So the usual order is:
 
 A school is where learners and teachers belong. Go to **People › Schools**.
 
-![The Schools list, with each school's country and curricula and the buttons Delete, Download Students, Edit and Fees Collection.](/admin-guide/schools-list.png)
+![The Schools list, with each school's country and curricula and the buttons Delete, Download Students, Sync Students, Edit and Fees Collection.](/admin-guide/schools-list.png)
 
 The columns are **School Name**, **Country**, **Curriculum** and **Tools**. The
 magnifying glass beside *School Name* searches by name, and the funnel beside
@@ -57,7 +57,8 @@ magnifying glass beside *School Name* searches by name, and the funnel beside
   hand, **Expected** and **Actual**. The admin does not collect any money. It
   only keeps the figures you type in, and the
   [Fees collection](/admin-guide/reports#fees-collection) report draws on them.
-- **Sync Students** is on this row too, for the platform's own accounts. See
+- **Sync Students** is on this row too, for an Admin or an Organisation Admin
+  (and for a platform account acting as your organisation). See
   [Add learners and teachers](/admin-guide/learners-and-teachers#sync-students).
 
 ### Add a school

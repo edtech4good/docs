@@ -5,7 +5,7 @@ description: How to publish, re-publish and retire a curriculum, read the change
 
 # Publish and sync
 
-*Written for the admin as of [`edtech-lms-ui` 183b4ac](https://github.com/edtech4good/edtech-lms-ui/commit/183b4ac), checked on 30 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
 
 Editing a curriculum does not change what learners see. **Publishing** does.
 This page covers the whole job: publishing, reading the change summary,
@@ -20,7 +20,7 @@ If you have not read it yet, the idea behind this page is on the
 Go to **Content › Curricula › Curriculum list**. Each curriculum has a row, and
 the **State** column says where it stands.
 
-![The Curriculum list with one curriculum, its State shown as Published with a date, and Publish, Retire, Delete and Edit buttons.](/admin-guide/curriculum-list.png)
+![The Curriculum list with Create and Sync Content buttons at the top, and one curriculum with its State shown as Published with a date and Publish, Retire, Delete and Edit buttons.](/admin-guide/curriculum-list.png)
 
 | State | What it means for learners |
 |---|---|
@@ -32,7 +32,8 @@ the **State** column says where it stands.
 | **—** | The state could not be read. Reload the page. |
 
 The buttons on a row are **Publish**, **Retire**, **Delete** and **Edit**.
-**Create**, at the top, starts a new curriculum. You need to be allowed to
+**Create**, at the top, starts a new curriculum, and **Sync Content**, next to
+it, is described [below](#sync-content). You need to be allowed to
 publish to see Publish and Retire: Organisation Admin, Admin and Super Admin
 accounts are. A platform account must first
 [choose an organisation](/admin-guide/signing-in#the-organisation-switcher).
@@ -88,17 +89,20 @@ The message tells you about the push:
 |---|---|
 | **Published**: *Published. The learner server has the organisation's published curricula.* | Recorded and pushed. Online learners can have it now. |
 | **Published**: *Published. No learner server is set up here, so nothing was pushed.* | Recorded, but this deployment has no learner server to push to. |
-| **Published “Name”, but the push failed**: *Published. The push to the learner server failed; a platform admin can re-push from Sync Content.* and a reason | Recorded, **not** pushed. This message stays on screen until you close it. See [Sync Content](#sync-content). |
+| **Published “Name”, but the push failed**: *Published. The push to the learner server failed; an Admin or Organisation Admin can send it again with Sync Content.* and a reason | Recorded, **not** pushed. This message stays on screen until you close it. See [Sync Content](#sync-content). |
 
 A failed push never undoes the publish. Your version is saved, and the push can
-be repeated.
+be repeated. After a Retire or a Delete the same sentence starts *Retired.* or
+*Deleted.* instead of *Published.*, and it means the same: the change is saved
+and not yet sent.
 
 ### Re-publish
 
 When nothing has changed, **Publish** reads **Re-publish**. Re-publishing records
-a new copy of the same version and pushes again. Use it after a failed push if
-your account cannot use Sync Content, or when learners are missing a curriculum
-you know is published.
+a new copy of the same version and pushes again. Use it after a failed push, or
+when learners are missing a curriculum you know is published. If you only want
+to send again what is already published, without recording a new copy, use
+[Sync Content](#sync-content).
 
 ### If two people publish at once
 
@@ -151,18 +155,22 @@ instead: publishing it again brings it back.
 Publishing pushes by itself. **Sync Content** is the manual push, for when an
 automatic one has failed.
 
-It is a button at the top of the Curriculum list. You see it only if your
-account is an **Admin** or a platform account. An Organisation Admin does not
-see it. If you cannot, ask the person who can.
+It is a button at the top of the Curriculum list. You see it if your account is
+an **Admin** or an **Organisation Admin**, or a platform account that has chosen
+an organisation. A **Teacher** does not see it. If you are an Admin or an
+Organisation Admin and the button is missing, sign out and sign back in: if you
+were already signed in when your role gained the button, your sign-in keeps its
+old permissions for up to an hour. Otherwise ask an Admin or Organisation Admin
+of your organisation.
 
 1. Choose **Sync Content** and confirm **Sure to sync?** with **OK**.
 2. You see **Success** and *Content synced to cloud sucessfully* (the word
    "successfully" is misspelled on screen).
 
-Sync Content works **per organisation**: it pushes the published curricula of one
-organisation. A platform account has to be acting as an organisation first, or
-you see **Choose an organisation.** Use the switcher at the top of the menu,
-then try again.
+Sync Content works **per organisation**: it pushes the published curricula of
+your own organisation, and nothing of any other. A platform account has to be
+acting as an organisation first, or you see **Choose an organisation.** Use the
+switcher at the top of the menu, then try again.
 
 If the learner server cannot be reached you see **The service is temporarily
 unavailable. Try again in a few minutes.** with a reference code. Try again

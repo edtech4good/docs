@@ -5,7 +5,7 @@ description: The messages admin staff meet when an upload, sign-in, publish or s
 
 # When something is refused
 
-*Written for the admin as of [`edtech-lms-ui` 183b4ac](https://github.com/edtech4good/edtech-lms-ui/commit/183b4ac), checked on 30 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
 
 Most refusals appear as a red **Error** notice in the top right corner of the
 page. This page lists the ones you are most likely to meet, quoted as they
@@ -117,9 +117,9 @@ chosen an organisation.
 - `Someone published this curriculum a moment ago. Reload to see their changes.`
   - **Cause:** Someone else published the same curriculum while you had the panel open. Nothing was lost.
   - **What to do:** Choose **Reload**, read the summary, publish again if still needed.
-- `Published “Name”, but the push failed` and `Published. The push to the learner server failed; a platform admin can re-push from Sync Content.` followed by a reason
-  - **Cause:** The version is saved, but sending it to the learner server failed. This notice stays on screen until you close it.
-  - **What to do:** Open **Publish** on the row and choose **Re-publish**, or ask an Admin or platform account to run **Sync Content**.
+- `Published “Name”, but the push failed` and `Published. The push to the learner server failed; an Admin or Organisation Admin can send it again with Sync Content.` followed by a reason
+  - **Cause:** The version is saved, but sending it to the learner server failed. This notice stays on screen until you close it. After a Retire or a Delete the sentence starts *Retired.* or *Deleted.*
+  - **What to do:** Choose **Sync Content** at the top of the Curriculum list, or open **Publish** on the row and choose **Re-publish**. If you do not see **Sync Content**, ask an Admin or Organisation Admin of your organisation.
 - `Can't be published` (the state), with `This curriculum can't be published yet. curriculums: 1 row names a subject that has been deleted.`
   - **Cause:** The curriculum refers to something that is gone, here a deleted subject.
   - **What to do:** Fix the thing named. The message ends *Nothing was published.*
@@ -135,6 +135,9 @@ chosen an organisation.
 - `The service is temporarily unavailable. Try again in a few minutes. Reference: E-…`
   - **Cause:** **Sync Content** or **Sync Students** could not reach the learner server.
   - **What to do:** Wait and try again. If it repeats, give the reference code to whoever runs the deployment.
+- A sync button you expect is not on the screen (no message)
+  - **Cause:** Only an Admin, an Organisation Admin and a platform account that has chosen an organisation see **Sync Content** and **Sync Students**. If your role is one of those and you were signed in before it gained the buttons, your sign-in still carries the old permissions, for up to an hour.
+  - **What to do:** Sign out and sign back in. See [Staff accounts and roles](/admin-guide/staff-and-roles#syncing-who-can-do-it).
 - `You don't have permission to do that.`
   - **Cause:** Your role is not allowed the action. Buttons you are not allowed to use are normally hidden, so you meet this only when an action reaches the server some other way.
   - **What to do:** Ask an account with the right role. See [What a role changes](/admin-guide/signing-in#what-a-role-changes).
