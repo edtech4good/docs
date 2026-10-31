@@ -12,21 +12,25 @@
  *     Sync really reach the student API;
  *   - a throwaway database seeded with one fixture organisation that has one
  *     school, one class and one published or publishable curriculum with at
- *     least one lesson, and no real names anywhere. Never point this at a real
- *     deployment. It only runs against localhost (see below);
+ *     least one lesson, one learner or more, and no real names anywhere. Never
+ *     point this at a real deployment. It only runs against localhost (see below);
  *   - two staff accounts with the same password: an Organisation Admin of the
  *     fixture organisation, and a platform (Super Admin) account that has no
- *     organisation;
+ *     organisation. The fixture organisation should also hold one more staff
+ *     account (so the staff list shows more than one row);
  *   - a private list of words that must never appear in a picture, kept outside
  *     this repository (GUIDE_BANNED_FILE and/or GUIDE_BANNED, below).
  *
  * What it changes in the database, and leaves changed:
+ *   - it adds one question tag (easy) if the organisation has none, so that the
+ *     tags list is not empty;
  *   - it publishes the curriculum if that is not already published;
  *   - it saves the first lesson once, unchanged, which settles the points stored
  *     beside it (a lesson save recomputes them).
  * It also renames that lesson for a moment to photograph the change summary and
- * then renames it back; if the rename back fails the script fails loudly and
- * says so. The refused sheet it uploads adds nothing, and the Sync Students
+ * then renames it back; if the rename back fails (also in the final clean-up
+ * step) the script says that the lesson must be renamed back by hand, and exits
+ * with a non-zero status. The refused sheet it uploads adds nothing, and the Sync Students
  * confirmation is cancelled, not run.
  *
  * It uses `playwright-core` and an installed Chromium; it installs nothing.
@@ -262,6 +266,63 @@ try {
   await clearNotices(page);
   await rmSync(bad, { force: true });
 
+  // ---- Setting up the organisation, staff accounts and reports (guide pages 3 to 5) ------------------------------
+  // A question tag, so the list is not empty (an organisation that has none gets one; nothing else is created).
+  const tags = await api(page, 'POST', '/questiontag', { pageindex: 0, pagesize: 10 });
+  if (tags.status !== 200) throw new Error(`Could not read the question tags (${tags.status}).`);
+  if ((tags.body?.data?.data ?? []).length === 0) {
+    const made = await api(page, 'POST', '/questiontag/create', { questiontagname: 'easy' });
+    if (made.status !== 200) throw new Error(`Could not add a question tag (${made.status}).`);
+  }
+
+  await page.goto(`${cfg.admin}/school/index`);
+  await page.locator('tr', { hasText: cfg.school }).waitFor();
+  await page.waitForTimeout(600);
+  await shot(page, 'schools-list.png', 'schools list', { x: 272, y: 20, width: 1008, height: 460 });
+
+  await page.goto(`${cfg.admin}/school/create`);
+  await page.locator('input[formcontrolname=schoolname]').fill('Example Day School');
+  await pick(page, 'Country', 'Cambodia');
+  await page.waitForTimeout(500);
+  await page.locator('nz-form-item', { has: page.locator('nz-form-label', { hasText: 'Curriculums' }) }).locator('nz-select').click();
+  await page.locator('.ant-select-item-option', { hasText: cfg.curriculum }).first().click();
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(400);
+  await shot(page, 'school-form.png', 'new school form', await boxOf(page, page.locator('nz-card'), 16)); // never submitted
+
+  await page.goto(`${cfg.admin}/questiontag/index`);
+  await page.locator('td', { hasText: 'easy' }).first().waitFor();
+  await page.waitForTimeout(600);
+  await shot(page, 'question-tags.png', 'question tags', { x: 272, y: 20, width: 1008, height: 330 });
+
+  await page.goto(`${cfg.admin}/user/index`);
+  await page.locator('tbody tr', { hasText: cfg.orgAdmin }).waitFor();
+  await page.waitForTimeout(600);
+  await shot(page, 'staff-list.png', 'staff accounts list', { x: 272, y: 20, width: 1008, height: 400 });
+
+  await page.goto(`${cfg.admin}/user/create`);
+  await page.locator('label.role').first().waitFor();
+  await page.waitForTimeout(600);
+  await shot(page, 'staff-form.png', 'new staff account form', await boxOf(page, page.locator('nz-card'), 16)); // never submitted
+
+  await page.goto(`${cfg.admin}/report`);
+  await page.getByText('Sync record').first().waitFor();
+  await page.waitForTimeout(600);
+  await shot(page, 'reports-hub.png', 'reports hub', { x: 272, y: 20, width: 1008, height: 780 });
+
+  // The Reach chart keeps its legend on the right, outside a 1280 pixel window: take this one wider, then go back.
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto(`${cfg.admin}/dashboard/index`);
+  await page.getByText('Plus Snapshot').waitFor();
+  await page.waitForTimeout(2500); // let the charts draw
+  await shot(page, 'reach-dashboard.png', 'reach dashboard', { x: 272, y: 20, width: 1220, height: 560 });
+  await page.setViewportSize({ width: 1280, height: 800 });
+
+  await page.goto(`${cfg.admin}/report/student-activity`);
+  await page.locator('tbody tr', { hasText: cfg.school }).first().waitFor();
+  await page.waitForTimeout(800);
+  await shot(page, 'active-status.png', 'active status report', { x: 272, y: 20, width: 1008, height: 690 });
+
   // Saving a lesson also recomputes the points stored beside it, which counts as a change to other rows. Save the first
   // lesson once, unchanged, now, so that the change summary photographed below shows the one rename and nothing else.
   const lessons = await api(page, 'POST', '/lesson', { pageindex: 0, pagesize: 10 });
@@ -347,16 +408,27 @@ try {
   console.error(String(err?.stack ?? err));
   process.exitCode = 1;
 } finally {
-  // If a failure left the lesson renamed, put it back.
+  // If a failure left the lesson renamed, put it back, and say so loudly if that does not work.
+  let restoreFailed = false;
   if (renamed) {
+    let status = 'no answer';
     try {
-      await api(renamed.page, 'PUT', `/lesson/${renamed.lessonid}`, renamed.body);
+      const r = await api(renamed.page, 'PUT', `/lesson/${renamed.lessonid}`, renamed.body);
+      status = String(r.status);
+      restoreFailed = r.status < 200 || r.status > 299;
     } catch {
-      console.error('Could not restore the renamed lesson; rename it back by hand.');
+      restoreFailed = true;
+    }
+    if (restoreFailed) {
+      console.error(
+        `The lesson "${renamed.body.lessonname}" (id ${renamed.lessonid}) was renamed for a picture and could not be renamed back (${status}). ` +
+          'It must be renamed back by hand in the admin (Content > Curricula > Lessons).',
+      );
     }
   }
   rmSync(scratch, { recursive: true, force: true });
   await browser.close();
+  if (restoreFailed) process.exit(1);
 }
 
 const big = made.filter((m) => m.bytes > MAX_BYTES);

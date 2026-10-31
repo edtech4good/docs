@@ -132,12 +132,18 @@ do in the admin.
 
 1. [Signing in and finding your way](/admin-guide/signing-in): your account,
    the menu, and what your role lets you do.
-2. [Add learners and teachers](/admin-guide/learners-and-teachers): the upload
+2. [Set up your organisation](/admin-guide/organisation-setup): schools,
+   classes, subjects, countries and tags, and what to create first.
+3. [Staff accounts and roles](/admin-guide/staff-and-roles): adding staff, what
+   each role can do, and who can sync.
+4. [Add learners and teachers](/admin-guide/learners-and-teachers): the upload
    sheets, the rules, and the Sync Students step.
-3. [Publish and sync](/admin-guide/publish-and-sync): Publish, Re-publish,
+5. [Publish and sync](/admin-guide/publish-and-sync): Publish, Re-publish,
    Retire, and getting content to learners.
-4. [When something is refused](/admin-guide/when-something-is-refused): the
+6. [Reports](/admin-guide/reports): the Reports hub, what each number means and
+   where it comes from.
+7. [When something is refused](/admin-guide/when-something-is-refused): the
    messages you will meet, with what to do about each.
 
-More pages (setting up your organisation, building a curriculum, reports) will
-follow.
+More pages (building a curriculum, entering text in two languages, and
+assessments) will follow.

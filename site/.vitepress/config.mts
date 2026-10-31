@@ -38,8 +38,11 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/admin-guide/' },
             { text: 'Signing in and finding your way', link: '/admin-guide/signing-in' },
+            { text: 'Set up your organisation', link: '/admin-guide/organisation-setup' },
+            { text: 'Staff accounts and roles', link: '/admin-guide/staff-and-roles' },
             { text: 'Add learners and teachers', link: '/admin-guide/learners-and-teachers' },
             { text: 'Publish and sync', link: '/admin-guide/publish-and-sync' },
+            { text: 'Reports', link: '/admin-guide/reports' },
             { text: 'When something is refused', link: '/admin-guide/when-something-is-refused' }
           ]
         },

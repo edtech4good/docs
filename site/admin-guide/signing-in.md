@@ -155,7 +155,10 @@ something reaches the server that your role does not allow, the answer is
   and can only view Countries.
 - **Admin** is a trusted member of an organisation's staff. It has the same
   content and people menus, but no **Staff accounts** or **Roles**. It sees
-  **Sync Content** and can manage Countries.
+  **Sync Content**. It is shown the buttons for Countries, but changing a country
+  is for the platform account and the server refuses it. See
+  [Set up your organisation](/admin-guide/organisation-setup#countries) and
+  [Staff accounts and roles](/admin-guide/staff-and-roles).
 - **Teacher** is a read-only staff login: it can look at curricula, schools and
   reports and change none of them. Teachers themselves use the learning app, not
   this admin.
