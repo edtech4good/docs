@@ -101,17 +101,18 @@ Only **Organisation Admin** can:
 - add, change and delete staff accounts;
 - see the **Roles** list.
 
-Of the three, only **Admin** can run **Sync Content**.
+Today, of the three, only **Admin** can run **Sync Content**.
 
 **Teacher** can do nothing beyond the first list.
 
-Nobody who works inside an organisation can run **Sync Students**, or add or
-change a country or an organisation. Two notes on those.
+Today nobody who works inside an organisation can run **Sync Students**, or add
+or change a country or an organisation. Notes on those.
 
-- **Sync Students** and **Organisations** are for **the people who run the
-  server**. They use a platform account that belongs to no organisation, can act
-  as any organisation, and is not something an organisation's staff can be given.
-  Today the admin shows **Sync Students** only to the people who run the server.
+- **Organisations** are for **the people who run the server**. They use a
+  platform account that belongs to no organisation, can act as any
+  organisation, and is not something an organisation's staff can be given.
+- Today the admin shows **Sync Students** only to the people who run the
+  server; a change is in progress (see [Syncing](#syncing-who-can-do-it-today) below).
 - **Countries** can be changed only by that platform account too. An Admin is
   shown the buttons and refused when it uses them. See
   [Set up your organisation](/admin-guide/organisation-setup#countries).
