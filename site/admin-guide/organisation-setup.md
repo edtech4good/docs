@@ -81,9 +81,8 @@ The rules:
   stop, comma, hyphen, ampersand or apostrophe shows the warning *Special
   characters are not allowed*, and **Submit** then answers **Invalid Input** and
   saves nothing.
-- **A school's name has to be new across the whole deployment**, not just in
-  your organisation. If any school anywhere already has the name, the save is
-  refused. See [When a save does nothing](#when-a-save-does-nothing).
+- **Use a name that is not already in use.** If it is, the save does nothing.
+  See [When a save does nothing](#when-a-save-does-nothing).
 - **If your curriculum is missing from the list**, it is not linked to the
   country you chose. Edit the curriculum and give it that country.
 
@@ -159,7 +158,9 @@ country that is not on the list, ask the people who run your deployment.
 
 **Expected Usage** is a number of minutes: the time you hope learners spend in
 the app. The [Impact](/admin-guide/reports#impact) report draws it as the
-*Expected* bar. The list shows it as, for example, `30 min`.
+*Expected* bar. The list shows it as, for example, `30 min`. In this version
+Actual and Expected may not be on the same scale; read Actual as a trend over
+time.
 
 ## Question tags and media tags
 
@@ -191,9 +192,7 @@ and nothing happens. This is the case for schools, classes, subjects and tags.
 The server did answer, with *That school already exists.*, *That standard
 already exists.*, *That subject already exists.*, *That question tag already
 exists.* or *That document tag already exists.*, but the admin does not show it.
-If a save seems to do nothing and the fields look right, look for the same name
-in the list. For a school, remember that another organisation's school counts.
-Use a different name.
+If a save does nothing, the name may already be in use; try a different name.
 
 **Anything else the server refuses shows one general notice**: a red **Error**
 saying *Some of the information isn't valid.* The notice does not say which
@@ -211,11 +210,12 @@ If a message is not here, see [When something is refused](/admin-guide/when-some
 
 ## Who can do what
 
-| | Organisation Admin | Admin | Teacher (staff account) |
-|---|---|---|---|
-| See schools, classes, subjects, countries, tags | Yes | Yes | Yes |
-| Add, change and delete schools, classes, subjects and tags | Yes | Yes | No |
-| Add, change or delete a country | No | No (shown the buttons, refused) | No |
+- **Organisation Admin, Admin and Teacher** can see schools, classes, subjects,
+  countries and tags.
+- **Organisation Admin and Admin** can also add, change and delete schools,
+  classes, subjects and tags.
+- **Nobody inside an organisation** can add, change or delete a country. An
+  Admin is shown the buttons and refused when it uses them.
 
 A **platform** account has to choose your organisation in the switcher before it
 can create any of these; otherwise it is asked to choose one. See

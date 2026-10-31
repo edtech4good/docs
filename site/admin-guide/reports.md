@@ -61,7 +61,7 @@ Teacher account has limits, below.
 **Reach** is the first thing you see after you sign in, under the title *Plus
 Snapshot*. Choose **Home** to come back to it.
 
-![The Reach dashboard: a line chart of schools, students and teachers by month, a legend headed Type, and below it the Gender and Access charts.](/admin-guide/reach-dashboard.png)
+![The Reach dashboard, titled Plus Snapshot: country and year lists above a line chart of schools, students and teachers by month, with a legend headed Type.](/admin-guide/reach-dashboard.png)
 
 - **The line chart** has one line each for **Schools**, **Students** and
   **Teachers**. Each point is how many of that kind had been added by the end of
@@ -69,8 +69,9 @@ Snapshot*. Choose **Home** to come back to it.
   **country** (or *All*) and a **year**.
 - **Gender** counts learners as *girls* or *boys* from the gender column of
   the upload sheet. A learner with no gender is not counted in either.
-- **Access** counts learners as *Online* or *Offline*, from the `type` column of
-  the upload sheet.
+- **Access** counts learners as *Online* or *Offline*, from the type recorded
+  for each learner (see the note on `type` in
+  [Add learners and teachers](/admin-guide/learners-and-teachers#the-learner-sheet)).
 - **Disability** splits learners into *with disability*, *no disability* and
   *not collected*. *With disability* means at least one of the six questions was
   answered "a lot of difficulty" or "cannot do at all". Learners enrolled before
@@ -96,7 +97,8 @@ For each of your countries, two bars under *Time spent on app*:
   over the last month, averaged per day and per learner.
 
 Actual comes from the activity records on the central server, so it reads **0**
-until classroom activity has been uploaded (see above).
+until classroom activity has been uploaded (see above). In this version Actual
+and Expected may not be on the same scale; read Actual as a trend over time.
 
 ### Fees collection
 
@@ -199,7 +201,6 @@ Where the upload is not in use, the table says **No Data** and always will.
 | **No Data** in a table | Nothing has reached this report yet. For the offline reports, **Impact** and **Sync record**, that usually means no classroom activity has been uploaded. For an online report, it means no matching learner activity yet. |
 | **That school has no students yet.**, in red, as soon as you open **Quiz scores** or **Level quiz** | The page tries to load a default learner before you choose one, and cannot find it. The message does not mean your school is empty. Choose a school, class and learner, then **Search**. |
 | **You don't have permission to do that.** when you open a learner report, with a Teacher account | The Teacher role cannot list learners, so the learner picker stays empty. The table still loads, but you cannot narrow it to one learner. |
-| A report shows fewer learners than you added | The account may be limited to some schools. See [Staff accounts and roles](/admin-guide/staff-and-roles#limiting-an-account-to-some-schools). |
 | **Active** `false` and **0** minutes for everyone | Nobody has signed in during the last month, or the activity has not reached the server yet. |
 | **The service is temporarily unavailable. Try again in a few minutes.** on an online report | The learner server could not be reached. Try again later. |
 

@@ -40,8 +40,7 @@ An account only ever sees the staff of its own organisation.
    looking over your shoulder. The password follows the staff rule on
    [Signing in and finding your way](/admin-guide/signing-in#the-staff-password-rule).
    Give the person the password privately.
-5. Leave **Country** and **School** empty unless the account should be limited
-   (see below).
+5. Leave **Country** and **School** empty.
 6. Tick one or more **User Roles**.
 7. Choose **Submit**. You see **User created sucessfully** (misspelled on
    screen) and the account is in the list. It can sign in straight away.
@@ -60,14 +59,6 @@ The refusals appear under the field they belong to.
 | That email is already registered. | An account already has this address. A deleted account keeps its address, so a deleted person's email cannot be used again. |
 | You can't give a role that has more access than your own. | You ticked a role you are not allowed to give. See [Which roles you can give](#which-roles-you-can-give). |
 | You don't have permission to do that. | Your own role is not allowed to add staff. |
-
-### Limiting an account to some schools
-
-By default a staff account covers every school in the organisation. To limit one,
-choose one or more **Schools** on the form. The **Country** box only narrows the
-list of schools you pick from. An account limited to some schools sees only
-those schools' learners in the learner [reports](/admin-guide/reports). Leave
-**School** empty for the whole organisation.
 
 ## Change or delete an account
 
@@ -90,27 +81,37 @@ The role names are as they appear in the list. What each role allows is read
 from the permissions the server gives it, grouped here by what you would want to
 do.
 
-| What you can do | Organisation Admin | Admin | Teacher |
-|---|---|---|---|
-| Look at curricula, lessons, questions, media, assessments, schools, classes, teachers, subjects, tags, countries and feedback | Yes | Yes | Yes |
-| Look at the Learners list and download a school's learners | Yes | Yes | No |
-| Open the Reports hub and download a report | Yes | Yes | Yes |
-| Add, change and delete content: curricula, grades, levels, lessons, questions, media, assessments | Yes | Yes | No |
-| Publish and retire a curriculum | Yes | Yes | No |
-| Add, change and delete schools, classes, subjects, tags and fees records | Yes | Yes | No |
-| Upload and edit learners and teacher logins | Yes | Yes | No |
-| Add, change and delete staff accounts | Yes | No | No |
-| See the **Roles** list | Yes | No | No |
-| Run **Sync Content** | No | Yes | No |
-| Run **Sync Students** | No | No | No |
-| Add or change a country, or an organisation | No | No | No |
+**Organisation Admin**, **Admin** and **Teacher** can all:
 
-The last two rows need a word of explanation.
+- look at curricula, lessons, questions, media, assessments, schools, classes,
+  teachers, subjects, tags, countries and feedback;
+- open the Reports hub and download a report.
+
+**Organisation Admin** and **Admin** can also:
+
+- look at the Learners list and download a school's learners;
+- add, change and delete content: curricula, grades, levels, lessons, questions,
+  media and assessments;
+- publish and retire a curriculum;
+- add, change and delete schools, classes, subjects, tags and fees records;
+- upload and edit learners and teacher logins.
+
+Only **Organisation Admin** can:
+
+- add, change and delete staff accounts;
+- see the **Roles** list.
+
+Of the three, only **Admin** can run **Sync Content**.
+
+**Teacher** can do nothing beyond the first list.
+
+Nobody who works inside an organisation can run **Sync Students**, or add or
+change a country or an organisation. Two notes on those.
 
 - **Sync Students** and **Organisations** are for **the people who run the
   server**. They use a platform account that belongs to no organisation, can act
   as any organisation, and is not something an organisation's staff can be given.
-  The admin shows **Sync Students** only to such an account.
+  Today the admin shows **Sync Students** only to the people who run the server.
 - **Countries** can be changed only by that platform account too. An Admin is
   shown the buttons and refused when it uses them. See
   [Set up your organisation](/admin-guide/organisation-setup#countries).
@@ -153,7 +154,7 @@ Who can start them today:
 | Job | Where | Who sees the button |
 |---|---|---|
 | **Sync Content** | A button at the top of the **Curriculum list** | An **Admin**, and the platform account once it has chosen your organisation |
-| **Sync Students** | On a school's row in **People › Schools** | The platform account only |
+| **Sync Students** | On a school's row in **People › Schools** | The people who run the server only |
 
 An **Organisation Admin** sees neither button. Publishing a curriculum still
 pushes it to the learner server by itself, so you rarely need **Sync Content**.
