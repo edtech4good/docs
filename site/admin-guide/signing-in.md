@@ -150,7 +150,7 @@ something reaches the server that your role does not allow, the answer is
 
 Your sign-in carries the permissions your role had when you signed in. If your
 role gains a button while you are signed in, it appears when you sign out and
-sign back in, or at the latest within an hour.
+sign back in, or usually within an hour.
 
 - **Organisation Admin** is the person who runs one organisation. It sees
   everything in the menu for that organisation, including **Staff accounts** and
