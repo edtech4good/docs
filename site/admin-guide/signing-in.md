@@ -5,7 +5,7 @@ description: Signing in to the admin with your email, the staff password rule, w
 
 # Signing in and finding your way
 
-*Written for the admin as of [`edtech-lms-ui` 183b4ac](https://github.com/edtech4good/edtech-lms-ui/commit/183b4ac), checked on 30 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
 
 ## Sign in
 
@@ -134,9 +134,9 @@ nothing to switch. The tile just names it.
 The platform's own accounts are different. Their tile at the top is a **switcher**:
 it opens a list with **All organisations** (the *platform view*, which reads
 across everything) and each organisation by name. Choosing one makes the
-account act as that organisation. Several steps in this guide, such as publishing
-and Sync Content, only work for a platform account once it has chosen an
-organisation. If you are doing this for an organisation, choose it
+account act as that organisation. Several steps in this guide, such as publishing,
+Sync Content and Sync Students, only work for a platform account once it has
+chosen an organisation. If you are doing this for an organisation, choose it
 first.
 
 ![The organisation switcher open, listing All organisations, Example Company and Example Network.](/admin-guide/org-switcher.png)
@@ -148,20 +148,25 @@ on a page. A button you are not allowed to use is simply not shown, and if
 something reaches the server that your role does not allow, the answer is
 "You don't have permission to do that."
 
+Your sign-in carries the permissions your role had when you signed in. If your
+role gains a button while you are signed in, it appears when you sign out and
+sign back in, or usually within an hour.
+
 - **Organisation Admin** is the person who runs one organisation. It sees
   everything in the menu for that organisation, including **Staff accounts** and
   **Roles**, and can publish and retire curricula and upload learners and
-  teachers. It does not see **Sync Content** or the **Sync Students** button,
-  and can only view Countries.
+  teachers. It also sees **Sync Content** and the **Sync Students** button,
+  which work for its own organisation only, and it can only view Countries.
 - **Admin** is a trusted member of an organisation's staff. It has the same
   content and people menus, but no **Staff accounts** or **Roles**. It sees
-  **Sync Content**. It is shown the buttons for Countries, but changing a country
+  **Sync Content** and the **Sync Students** button, for its own organisation.
+  It is shown the buttons for Countries, but changing a country
   is for the platform account and the server refuses it. See
   [Set up your organisation](/admin-guide/organisation-setup#countries) and
   [Staff accounts and roles](/admin-guide/staff-and-roles).
 - **Teacher** is a read-only staff login: it can look at curricula, schools and
-  reports and change none of them. Teachers themselves use the learning app, not
-  this admin.
+  reports and change none of them. It sees neither sync button. Teachers
+  themselves use the learning app, not this admin.
 - **Super Admin** is for the people who run the deployment. It is a platform
   account with no organisation of its own. It sees the **Platform** group and
   the switcher, and can act as any organisation.

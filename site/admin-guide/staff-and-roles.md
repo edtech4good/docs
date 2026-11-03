@@ -1,11 +1,11 @@
 ---
 title: Staff accounts and roles
-description: How to add a staff account to the admin, which roles you can give, what each role can and cannot do, and who can run Sync Content and Sync Students today.
+description: How to add a staff account to the admin, which roles you can give, what each role can and cannot do, and who can run Sync Content and Sync Students.
 ---
 
 # Staff accounts and roles
 
-*Written for the admin as of [`edtech-lms-ui` 183b4ac](https://github.com/edtech4good/edtech-lms-ui/commit/183b4ac), checked on 30 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
 
 A **staff account** is a login to the admin: an email address, a password and one
 or more **roles**. The role decides what the account can see and change. This
@@ -57,7 +57,7 @@ The refusals appear under the field they belong to.
 | Enter an email address of at most 45 characters. | The email is not a valid address, or it is longer than 45 characters. The same sentence covers both. |
 | Use 8 to 50 characters with an uppercase letter, a lowercase letter and a number, and no spaces. | The password breaks the staff rule. |
 | That email is already registered. | An account already has this address. A deleted account keeps its address, so a deleted person's email cannot be used again. |
-| You can't give a role that has more access than your own. | You ticked a role you are not allowed to give. See [Which roles you can give](#which-roles-you-can-give). |
+| You can't give a role that has more access than your own. | You ticked a role you are not allowed to give. See [Which roles you can give](#which-roles-you-can-give). If your own role has just gained permissions (the two sync buttons, for instance), sign out and sign back in first: your sign-in still carries the old permissions, so a role that holds the new ones looks wider than yours. |
 | You don't have permission to do that. | Your own role is not allowed to add staff. |
 
 ## Change or delete an account
@@ -94,36 +94,35 @@ do.
   media and assessments;
 - publish and retire a curriculum;
 - add, change and delete schools, classes, subjects, tags and fees records;
-- upload and edit learners and teacher logins.
+- upload and edit learners and teacher logins;
+- run **Sync Content** and **Sync Students**, each for their own organisation
+  (see [Syncing](#syncing-who-can-do-it) below).
 
 Only **Organisation Admin** can:
 
 - add, change and delete staff accounts;
 - see the **Roles** list.
 
-Today, of the three, only **Admin** can run **Sync Content**.
+**Teacher** can do nothing beyond the first list. It cannot run either sync.
 
-**Teacher** can do nothing beyond the first list.
-
-Today nobody who works inside an organisation can run **Sync Students**, or add
-or change a country or an organisation. Notes on those.
+Nobody who works inside an organisation can add or change a country or an
+organisation. Notes on those.
 
 - **Organisations** are for **the people who run the server**. They use a
   platform account that belongs to no organisation, can act as any
   organisation, and is not something an organisation's staff can be given.
-- Today the admin shows **Sync Students** only to the people who run the
-  server; a change is in progress (see [Syncing](#syncing-who-can-do-it-today) below).
 - **Countries** can be changed only by that platform account too. An Admin is
   shown the buttons and refused when it uses them. See
   [Set up your organisation](/admin-guide/organisation-setup#countries).
 
 ### The three roles in a sentence each
 
-- **Organisation Admin** runs one organisation. It can do everything an Admin
-  can except sync content, and in addition manages staff accounts. It is the
-  role to give the person in charge of the organisation's setup.
+- **Organisation Admin** runs one organisation. It can do what an Admin can,
+  and in addition manages staff accounts. It is the role to give the person in
+  charge of the organisation's setup.
 - **Admin** builds and publishes content and manages schools, learners and
-  teachers. It cannot manage staff, and it can run **Sync Content**.
+  teachers, and runs the two syncs for its organisation. It cannot manage
+  staff.
 - **Teacher** is a read-only login. It can look at content, schools and reports
   and change nothing. A Teacher account cannot list learners, so on report pages
   that have a learner picker it sees *You don't have permission to do that.* and
@@ -145,31 +144,39 @@ The **Roles** page (**Administration › Roles**) lists the roles your account c
 give. Roles are shared by every organisation and are changed only by the
 platform account, so you cannot create, edit or delete a role.
 
-## Syncing: who can do it today
+## Syncing: who can do it
 
 Two jobs copy your work to the learner server. They are described in
 [Publish and sync](/admin-guide/publish-and-sync) and
 [Add learners and teachers](/admin-guide/learners-and-teachers#sync-students).
-Who can start them today:
+Who can start them:
 
 | Job | Where | Who sees the button |
 |---|---|---|
-| **Sync Content** | A button at the top of the **Curriculum list** | An **Admin**, and the platform account once it has chosen your organisation |
-| **Sync Students** | On a school's row in **People › Schools** | The people who run the server only |
+| **Sync Content** | A button at the top of the **Curriculum list** | An **Admin** or an **Organisation Admin**, for their own organisation; the platform account once it has chosen your organisation |
+| **Sync Students** | On a school's row in **People › Schools** | The same people |
 
-An **Organisation Admin** sees neither button. Publishing a curriculum still
-pushes it to the learner server by itself, so you rarely need **Sync Content**.
-**Sync Students** is needed after every learner upload, so an Organisation Admin
-asks the people who run the server to run it, naming the school.
+A **Teacher** sees neither button.
 
-A change that lets an Admin and an Organisation Admin sync their own
-organisation is in progress. When it arrives, the buttons will appear for those
-roles and this page and the two pages above will change with it.
+Each sync moves only the organisation of the account that runs it. **Sync
+Content** sends your organisation's published curricula. **Sync Students** sends
+the learners of the school whose row you used, and a school that belongs to
+another organisation is not found. Publishing a curriculum still pushes it to
+the learner server by itself, so you rarely need **Sync Content**. **Sync
+Students** is needed after every learner upload.
+
+**If you were already signed in when your role gained these buttons, sign out
+and sign back in.** Your sign-in carries the permissions your role had when you
+signed in, and it keeps them for up to an hour, so the buttons do not appear
+until you sign in again.
 
 ## If you cannot see something
 
 - **A menu entry is missing.** Your role is not allowed it. A role never shows
   what it cannot use. See [What a role changes](/admin-guide/signing-in#what-a-role-changes).
+- **A sync button is missing, though your role is an Admin or an Organisation
+  Admin.** Sign out and sign back in, as described under
+  [Syncing](#syncing-who-can-do-it).
 - **A platform account sees buttons greyed out.** Choose the organisation in
   the switcher first. See [The organisation switcher](/admin-guide/signing-in#the-organisation-switcher).
 - **You were signed out right after someone used your account.** One account

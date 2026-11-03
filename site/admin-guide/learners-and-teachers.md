@@ -5,7 +5,7 @@ description: How to add learners and teachers from a spreadsheet, every column o
 
 # Add learners and teachers
 
-*Written for the admin as of [`edtech-lms-ui` 183b4ac](https://github.com/edtech4good/edtech-lms-ui/commit/183b4ac), checked on 30 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
 
 You add people to the admin by uploading a **CSV file**, one row per person. A
 CSV is a plain spreadsheet export: in Excel or Google Sheets choose *Save as*
@@ -198,12 +198,12 @@ across.
 
 Things to know:
 
-- **The button is not shown to every account.** In the version this guide was
-  checked against, **Sync Students appears only for the platform's own
-  accounts**. An Organisation Admin account does not see it, and the server
-  refuses that account's request if it is sent anyway. An Admin account does not
-  see it either. If you do not see it, ask whoever runs your deployment to run
-  Sync Students for your school, and tell them which school.
+- **Who sees the button.** An **Admin** or an **Organisation Admin** sees
+  **Sync Students** on the rows of their own organisation's schools, and
+  can run it for those schools only. A **Teacher** does not see it. If you were
+  already signed in when your role gained the button, **sign out and sign back
+  in**: your sign-in keeps the permissions it started with for up to an hour.
+  See [Staff accounts and roles](/admin-guide/staff-and-roles#syncing-who-can-do-it).
 - **A platform account should choose your organisation first** with the
   switcher, so that the Schools list shows only your schools.
 - **It is per school.** Sync each school you added learners to.
