@@ -120,8 +120,9 @@ screen calls a class a "standard" in some messages; it is the same thing.
   asks **Sure to delete?** and shows **Standard deleted sucessfully**.
 
 A class that still has learners in it can't be deleted. The admin refuses and
-shows *That standard has students and can't be deleted.* Move the learners to
-another class first, using the Learners list, then delete it.
+says how many, for example *That class has 3 learners and can't be deleted. Move
+or remove them first.* Move them to another class in the Learners list, then
+delete the class.
 
 ## Subjects
 
