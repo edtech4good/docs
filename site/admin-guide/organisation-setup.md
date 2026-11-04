@@ -119,12 +119,9 @@ screen calls a class a "standard" in some messages; it is the same thing.
 - **Edit** changes the name or moves the class to another school. **Delete**
   asks **Sure to delete?** and shows **Standard deleted sucessfully**.
 
-::: warning Do not delete a class that has learners in it
-The admin is meant to refuse this, with *That standard has students and can't
-be deleted.* In the version this guide was checked against it does not: the
-class is deleted even with learners in it. Check the Learners list first and
-move the learners before you delete a class.
-:::
+A class that still has learners in it can't be deleted. The admin refuses and
+shows *That standard has students and can't be deleted.* Move the learners to
+another class first, using the Learners list, then delete it.
 
 ## Subjects
 
