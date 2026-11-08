@@ -111,7 +111,8 @@ the password cannot be shown again. If a **Copy** button does not work you see
 *The copy didn't work. Select the username and copy it by hand.* (or *password*),
 and you can select the text and copy it yourself.
 
-Above them, one line says whether the learner can sign in yet:
+Above them, one line says whether the learner can sign in yet. It starts with the
+learner's name, shown here as [Name]:
 
 - *<name> can sign in now with these details.* The learner was copied to the
   learner server as soon as you saved. Nothing more is needed.
