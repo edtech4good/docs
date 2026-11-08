@@ -153,7 +153,7 @@ you then see only your own countries. Your organisation's staff can view the
 list. The **Create**, **Edit** and **Delete** buttons are not shown to an
 Organisation Admin. An Admin account is shown them, but the server refuses
 every one of them with *You don't have permission to do that.* If you need a
-country that is not on the list, ask the people who run your deployment.
+country that is not on the list, ask the people who run the server.
 
 **Expected Usage** is a number of minutes: the time you hope learners spend in
 the app. The [Impact](/admin-guide/reports#impact) report draws it as the
@@ -213,8 +213,10 @@ learners after the next Sync Content.* In practice:
   a lesson without passing its quiz keep that result until their points are
   recalculated, which the people who run the server do.
 - It can only hold a lesson back when the lesson's pass mark needs the quiz's
-  points. A lesson whose other parts already add up to the pass mark can still
-  finish without a pass.
+  points. If the video and practice alone reach the lesson's pass mark, the
+  lesson finishes without passing the test. See
+  [how a lesson earns its points](/reference/lessons-and-question-types#how-a-lesson-earns-its-points)
+  for the pass mark.
 
 If you turn it off again, run Sync Content again for it to reach learners.
 

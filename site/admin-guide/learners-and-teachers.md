@@ -118,21 +118,27 @@ learner's name, shown here as [Name]:
   learner server as soon as you saved. Nothing more is needed.
 - *[Name] can't sign in yet: the learning server did not answer. Run Sync
   Students for this school on the Schools screen.* The learner is saved in the
-  admin, but the learner server could not be reached. Run
-  [Sync Students](#sync-students) for the school, and they can sign in
-  afterwards.
+  admin, but the learning server either did not answer or refused the learner.
+  The most common reason is that the learner's class is not on the learning
+  server yet. Run [Sync Students](#sync-students) for the school. If that does
+  not fix it, run
+  [Sync Content](/admin-guide/publish-and-sync#sync-content) first, then Sync
+  Students again.
 - *[Name] can sign in once the learning server next syncs.* The learner is saved
-  and will be picked up at the learner server's next sync. No action is needed
-  from you.
+  and will be picked up at the learner server's next sync. You see this line
+  only when no learning server is connected to the admin. Learners for a
+  classroom server reach it by file instead; see **Download Students** in
+  [Sync Students](#sync-students).
 
 A learner added with this form is recorded as **online**. See the note about `type` under
 [The learner sheet](#the-learner-sheet).
 
 ::: tip Run Sync Content first
-The curriculum and the class the learner is placed in must already be on the
-learning server. If you have just created or changed a curriculum, publish it
-or run [Sync Content](/admin-guide/publish-and-sync#sync-content) first, and
-only then add the learner.
+The learner's school and class must already be on the learning server, or it
+refuses the learner and nothing is saved there. The curriculum is not required
+on the learning server. If you have just created the school or the class, run
+[Sync Content](/admin-guide/publish-and-sync#sync-content) first, and only then
+add the learner.
 :::
 
 Give the username and password to the learner in person or on a printed card, as
