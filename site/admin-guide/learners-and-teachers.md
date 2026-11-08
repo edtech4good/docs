@@ -114,14 +114,14 @@ and you can select the text and copy it yourself.
 Above them, one line says whether the learner can sign in yet. It starts with the
 learner's name, shown here as [Name]:
 
-- *<name> can sign in now with these details.* The learner was copied to the
+- *[Name] can sign in now with these details.* The learner was copied to the
   learner server as soon as you saved. Nothing more is needed.
-- *<name> can't sign in yet: the learning server did not answer. Run Sync
+- *[Name] can't sign in yet: the learning server did not answer. Run Sync
   Students for this school on the Schools screen.* The learner is saved in the
   admin, but the learner server could not be reached. Run
   [Sync Students](#sync-students) for the school, and they can sign in
   afterwards.
-- *<name> can sign in once the learning server next syncs.* The learner is saved
+- *[Name] can sign in once the learning server next syncs.* The learner is saved
   and will be picked up at the learner server's next sync. No action is needed
   from you.
 
