@@ -214,7 +214,7 @@ learners after the next Sync Content.* In practice:
   recalculated, which the people who run the server do.
 - It can only hold a lesson back when the lesson's pass mark needs the quiz's
   points. If the video and practice alone reach the lesson's pass mark, the
-  lesson finishes without passing the test. See
+  lesson finishes without passing the quiz. See
   [how a lesson earns its points](/reference/lessons-and-question-types#how-a-lesson-earns-its-points)
   for the pass mark.
 

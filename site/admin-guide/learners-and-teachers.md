@@ -125,7 +125,7 @@ learner's name, shown here as [Name]:
   [Sync Content](/admin-guide/publish-and-sync#sync-content) first, then Sync
   Students again.
 - *[Name] can sign in once the learning server next syncs.* The learner is saved
-  and will be picked up at the learner server's next sync. You see this line
+  and will be picked up at the learning server's next sync. You see this line
   only when no learning server is connected to the admin. Learners for a
   classroom server reach it by file instead; see **Download Students** in
   [Sync Students](#sync-students).
