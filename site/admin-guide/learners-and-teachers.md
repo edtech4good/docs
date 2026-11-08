@@ -1,16 +1,20 @@
 ---
 title: Add learners and teachers
-description: How to add learners and teachers from a spreadsheet, every column of the learner sheet, the rules that refuse a row, and the Sync Students step that makes the accounts work in the learning app.
+description: How to add one learner at a time, or many learners and teachers from a spreadsheet, every column of the learner sheet, the rules that refuse a row, and the Sync Students step that makes the accounts work in the learning app.
 ---
 
 # Add learners and teachers
 
-*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026. The **Add one learner** section was checked against
+[`edtech-lms-ui` 206b525](https://github.com/edtech4good/edtech-lms-ui/commit/206b525) and
+[`edtech-lms-api` c4f9a8a](https://github.com/edtech4good/edtech-lms-api/commit/c4f9a8a)
+on 8 Nov 2026.*
 
-You add people to the admin by uploading a **CSV file**, one row per person. A
-CSV is a plain spreadsheet export: in Excel or Google Sheets choose *Save as*
-or *Download* and pick CSV. There are two uploads, because they make different
-things:
+You can add **one learner at a time** with a form, or add **many people at
+once** by uploading a **CSV file**, one row per person. Teachers are added by
+upload only. A CSV is a plain spreadsheet export: in Excel or Google Sheets
+choose *Save as* or *Download* and pick CSV. There are two uploads, because they
+make different things:
 
 - **Upload Users**, on the **Learners** page, creates **learners**.
 - **Upload Teachers**, on the **Teachers** page, creates **teacher logins**.
@@ -18,6 +22,8 @@ things:
 An upload only creates the accounts in the admin. For learners to sign in to the
 learning app, a second step, **Sync Students**, copies them to the learner
 server. Skipping it is the most common reason a new learner "cannot log in".
+The form for one learner sends that learner to the learner server as soon as you
+save, so it usually needs no second step. See [Add one learner](#add-one-learner).
 
 ## Before you start
 
@@ -27,13 +33,114 @@ You need:
   **People › Schools**, and attached to at least one curriculum;
 - for learners, a **class** under **People › Classes** (a class is required for
   every learner row that is not a teacher);
-- an account that is allowed to upload: Organisation Admin, Admin or Super
-  Admin. If **Upload Users** or **Upload Teachers** is greyed out, you are
+- an account that is allowed to upload or add: Organisation Admin, Admin or Super
+  Admin. If **Add learner**, **Upload Users** or **Upload Teachers** is greyed out, you are
   signed in with a platform account that has not chosen an organisation. Use
   the switcher at the top of the menu first. See
   [Signing in and finding your way](/admin-guide/signing-in#the-organisation-switcher).
 
+## Add one learner
+
+Use this when you have a learner or two to add. For a whole class, use the sheet
+in [Add learners](#add-learners) instead.
+
+1. Go to **People › Learners**.
+2. Choose **+ Add learner**, next to **Upload Users**. A form opens at the right
+   of the page. The button is greyed out in the same cases as **Upload Users**.
+3. Fill in the form (the fields are below) and choose **Add learner**.
+4. A panel headed **Learner added** shows the username and the password. Copy or
+   write them down, then choose **Done**.
+
+### The fields
+
+A star in the form marks a required field.
+
+**Account**
+
+- **First name** (required). 2 to 45 characters. The message if it is wrong is
+  *Enter a name of 2 to 45 characters.*
+- **Last name**. Optional; up to 45 characters.
+- **Username** (required). 2 to 16 English letters or numbers. The form checks it
+  as you type, and a line under the field says *Available. Learners use this to
+  sign in.* or *That username is taken.* If the characters or the length are not
+  allowed you see *Use 2 to 16 English letters or numbers.* A username counts as
+  taken **whatever its capital letters**: if `Sokha2` exists, `sokha2` is taken.
+  As with the sheet, a username that any organisation has used cannot be used
+  again.
+- **Password** (required). 8 to 32 characters with at least one letter and one
+  number, and no spaces. If it is wrong you see *Use 8 to 32 characters with at
+  least one letter and one number, and no spaces.* Two buttons sit beside the
+  field:
+  - **Generate** fills in a password of two short English words and two digits,
+    which is easy to read out or write on a card.
+  - **Show** shows the password you typed or generated, and then reads **Hide**.
+
+**Where**
+
+- **School** (required). If you have only one school it is already chosen. If the
+  schools cannot be loaded you see *The schools couldn't be loaded.* and a
+  **Try again** link.
+- **Class** (required). Choose a school first; the list then shows that school's
+  classes. If it has none you see *This school has no classes yet. Add one on the
+  Schools screen.*
+- **Curriculum** (required). Choose one or more; the list shows the curricula
+  that school is attached to. If it has none you see *This school has no
+  curricula yet.* Changing the school clears the class and the curriculum.
+
+**About the learner**
+
+- **Gender** (required). **Female** or **Male**.
+- **Date of birth**. Optional. A date from 1900 to yesterday. If it is not a real
+  date or is outside that range you see *Enter a date of birth between 1900 and
+  yesterday.*
+
+If you close the form after typing something, you are asked **Discard this
+learner?** with *This learner hasn't been added yet.* Choose **Discard**, or
+**Keep editing** to go back.
+
+### After you choose Add learner
+
+If the server refuses something, the message appears under the field it belongs
+to, or at the top of the form. If the form says *Some of the information isn't
+valid. Check the form and try again.*, read each field's message and fix it.
+
+The **Learner added** panel shows the **Username** and the **Password**, each
+with a **Copy** button, and the line *Write it down or copy it now; it is not
+shown again.* Take it at its word: once you choose **Done** or close the panel,
+the password cannot be shown again. If a **Copy** button does not work you see
+*The copy didn't work. Select the username and copy it by hand.* (or *password*),
+and you can select the text and copy it yourself.
+
+Above them, one line says whether the learner can sign in yet:
+
+- *<name> can sign in now with these details.* The learner was copied to the
+  learner server as soon as you saved. Nothing more is needed.
+- *<name> can't sign in yet: the learning server did not answer. Run Sync
+  Students for this school on the Schools screen.* The learner is saved in the
+  admin, but the learner server could not be reached. Run
+  [Sync Students](#sync-students) for the school, and they can sign in
+  afterwards.
+- *<name> can sign in once the learning server next syncs.* The learner is saved
+  and will be picked up at the learner server's next sync. No action is needed
+  from you.
+
+A learner added with this form is recorded as **online**. See the note about `type` under
+[The learner sheet](#the-learner-sheet).
+
+::: tip Run Sync Content first
+The curriculum and the class the learner is placed in must already be on the
+learning server. If you have just created or changed a curriculum, publish it
+or run [Sync Content](/admin-guide/publish-and-sync#sync-content) first, and
+only then add the learner.
+:::
+
+Give the username and password to the learner in person or on a printed card, as
+described under [Passwords](#passwords).
+
 ## Add learners
+
+Use the sheet to add many learners at once. For one learner, use
+[Add one learner](#add-one-learner).
 
 ![The Learners page, listing learners with their curriculum, school, class and country. Sample File and Upload Users buttons are at the top right.](/admin-guide/learners-list.png)
 
@@ -132,7 +239,8 @@ A few things about these rules:
   To put learners in different classes, upload one file per class.
 - **About `type`.** The sheet insists on `offline` or `online`, but a learner
   added through **Upload Users** is recorded as `offline` whichever you write,
-  and a row marked `is_teacher_acc` `1` is recorded as `online`. The
+  and a row marked `is_teacher_acc` `1` is recorded as `online`. A learner
+  added with the **Add learner** form is recorded as `online`. The
   **Type** column of the Learners list shows what was recorded for learners
   added by upload. It is blank for learners that were not added that way.
 
@@ -145,7 +253,8 @@ scrambled value, so nobody, including you, can read it back later.
 That makes the CSV the only readable copy. **Delete the filled sheet** from your
 computer and your downloads folder as soon as the upload has gone through, and
 do not email it. Give each learner their password in person or on a printed
-card.
+card. The same goes for a password made with the **Add learner** form: write it
+on a card and hand it over, rather than sending it in a message.
 
 To change a password later, use the edit sheet, below.
 
