@@ -5,7 +5,10 @@ description: How to publish, re-publish and retire a curriculum, read the change
 
 # Publish and sync
 
-*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026. The **Sync Teachers** section was checked against
+[`edtech-lms-ui` 0b4bf9e](https://github.com/edtech4good/edtech-lms-ui/commit/0b4bf9e) and
+[`edtech-lms-api` 33c357a](https://github.com/edtech4good/edtech-lms-api/commit/33c357a)
+on 9 Nov 2026.*
 
 Editing a curriculum does not change what learners see. **Publishing** does.
 This page covers the whole job: publishing, reading the change summary,
@@ -176,6 +179,44 @@ If the learner server cannot be reached you see **The service is temporarily
 unavailable. Try again in a few minutes.** with a reference code. Try again
 later.
 
+## Sync Teachers
+
+**Sync Teachers** copies a school's teacher logins to the learner server, the one
+the learning app signs in to. It is the teachers' counterpart of
+[Sync Students](/admin-guide/learners-and-teachers#sync-students), which sends
+learners only.
+
+It is a button on the school's row in **People › Schools**, beside **Sync
+Students**. The same people see it: an **Admin** or an **Organisation Admin** for
+their own organisation's schools, and a platform account once it has chosen an
+organisation. A **Teacher** does not see it. If you were already signed in when
+your role gained the button, sign out and sign back in.
+
+1. Go to **People › Schools**.
+2. On the school's row, choose **Sync Teachers** and confirm **Sure to sync?** with
+   **OK**.
+3. You see **Success** and *`<school name>` teachers synced successfully*.
+
+**What it sends.** All of that school's teacher logins, including any you have
+disabled or deleted, so those changes reach the learner server too. It sends
+teachers only, and only the school you chose.
+
+**When to run it.**
+
+- After **Upload Teachers**. A teacher login made from a sheet stays in the admin,
+  and the teacher cannot sign in on the learner server, until you run Sync
+  Teachers for that school.
+- When a message tells you to. After **+ Add teacher**, **Reset password**,
+  **Disable** or **Enable** on a teacher, the admin says whether the learner server
+  got the change. If it says the learning server did not answer, it also says
+  *Run Sync Teachers for this school on the Schools screen.* When the change did
+  reach the learner server, you do not need to run it.
+
+If the school has no teachers you get **There are no teachers to sync.** If the
+learner server cannot be reached you get **The service is temporarily unavailable.
+Try again in a few minutes.** with a reference code; nothing is lost, so try again
+later. See [When something is refused](/admin-guide/when-something-is-refused#syncing).
+
 ## What learners see, and when
 
 | Learner's situation | They see… |
@@ -188,9 +229,13 @@ later.
 
 Two cautions:
 
-- **Learner accounts are separate from content.** Publishing sends curricula, not
+- **Accounts are separate from content.** Publishing sends curricula, not
   people. A new learner cannot sign in until you have also run
-  [Sync Students](/admin-guide/learners-and-teachers#sync-students).
+  [Sync Students](/admin-guide/learners-and-teachers#sync-students), and a teacher
+  login made from a sheet cannot sign in until you have run
+  [Sync Teachers](#sync-teachers). A learner added with the form is sent at once,
+  but their school and class must already be on the learner server, so run Sync
+  Content first.
 - **Media files are not part of the snapshot.** A publish records which media a
   lesson uses, but a file replaced in storage under the same name reaches
   learners without a publish. See

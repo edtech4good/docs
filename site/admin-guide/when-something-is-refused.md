@@ -5,7 +5,10 @@ description: The messages admin staff meet when an upload, sign-in, publish or s
 
 # When something is refused
 
-*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026. The sections **Saved, but the learning server did not answer** and **Add, edit, reset and disable forms** were checked against
+[`edtech-lms-ui` 0b4bf9e](https://github.com/edtech4good/edtech-lms-ui/commit/0b4bf9e) and
+[`edtech-lms-api` 33c357a](https://github.com/edtech4good/edtech-lms-api/commit/33c357a)
+on 9 Nov 2026.*
 
 Most refusals appear as a red **Error** notice in the top right corner of the
 page. This page lists the ones you are most likely to meet, quoted as they
@@ -109,7 +112,7 @@ chosen an organisation.
   - **Where:** In the **Publish** panel, after you choose Publish.
   - **What to do:** The same.
 - `Choose an organisation to act in before you create content. Use the organisation switcher, then try again.`
-  - **Where:** A tooltip on **Upload Users** and **Upload Teachers**, which are greyed out.
+  - **Where:** A tooltip on **+ Add learner**, **Upload Users**, **+ Add teacher** and **Upload Teachers**, which are greyed out.
   - **What to do:** The same.
 
 ## Publishing
@@ -127,16 +130,82 @@ chosen an organisation.
   - **Cause:** The publish call could not be sent.
   - **What to do:** Check your connection and try again.
 
+## Saved, but the learning server did not answer
+
+These notices come after **Add learner**, **+ Add teacher**, **Edit details**,
+**Reset password**, **Disable** and **Enable**. In every case **the change is saved
+in the admin and is not lost**. What failed is the copy to the learner server, so
+until you run the sync the notice names, that server still has the old state. The
+person may still be able to sign in with the old password, or after a disable.
+
+- `[Name] can't sign in yet: the learning server did not answer. Run Sync Students for this school on the Schools screen.` (a learner added with the form)
+  - **Cause:** The learner is saved, but the learner server did not answer or refused the learner.
+  - **What to do:** Run **Sync Students** for the school. If that does not fix it, run **Sync Content** first, then Sync Students again.
+- `[Name] can't sign in yet: the learning server did not answer. Run Sync Teachers for this school on the Schools screen.` (a teacher added with the form)
+  - **Cause:** The teacher is saved, but the learner server did not answer.
+  - **What to do:** Run **Sync Teachers** for the school. See [Sync Teachers](/admin-guide/publish-and-sync#sync-teachers).
+- `Saved, but the learning server doesn't have this class or curriculum yet. Run Sync Content, then Sync Students for this school.`
+  - **Cause:** The learner is saved, but the learner server does not yet have the learner's class or curriculum, so it refused the learner. You can see it after **Add learner** and **Edit details**.
+  - **What to do:** Run **Sync Content**, then **Sync Students** for the school, in that order.
+- `The details were saved, but the learning server did not answer. Run Sync Students for this school on the Schools screen.` (**Saved**, after Edit details)
+  - **Cause:** The edit is in the admin; the learner server has the old details.
+  - **What to do:** Run **Sync Students** for the school.
+- `[Username] is disabled on central. The change was saved, but the learning server did not answer. Run Sync Students for this school on the Schools screen.` (**Saved**, after Disable or Enable on a learner; the first sentence says *enabled* after Enable)
+  - **Cause:** The admin has the change; the learner server does not yet. "Central" here means the admin's own records. The learner can still sign in until the sync runs.
+  - **What to do:** Run **Sync Students** for the school.
+- `[Username] is disabled on central, but the learning server did not answer. Run Sync Teachers for this school on the Schools screen.` (**Saved**, after Disable or Enable on a teacher)
+  - **Cause and what to do:** The same, with **Sync Teachers**.
+- `The old password still works on the learning server. The password was saved, but the learning server did not answer. Run Sync Students for this school on the Schools screen.` (after Reset password on a learner)
+  - **Cause:** The new password is in the admin; the learner server still accepts the old one.
+  - **What to do:** Run **Sync Students** for the school, and do not hand over the new password as working until you have.
+- `The learning server did not answer, so the old password still works there. Run Sync Teachers for this school on the Schools screen.` (after Reset password on a teacher)
+  - **Cause and what to do:** The same, with **Sync Teachers**.
+- `[Name] can sign in once the learning server next syncs.`, `Saved. The learning server gets the change at its next sync.` and `The learning server gets the new password at its next sync.`
+  - **Cause:** No learner server is connected to this admin, so nothing was sent.
+  - **What to do:** Nothing. A classroom server gets accounts by file; see **Download Students** in [Sync Students](/admin-guide/learners-and-teachers#sync-students).
+
+## Add, edit, reset and disable forms
+
+Most field messages appear under the field they belong to. The others appear at the top of the form. These are the ones you may meet:
+
+- `Some of the information isn't valid. Check the form and try again.`
+  - **Cause:** The server refused one or more fields.
+  - **What to do:** Read the message under each field and fix it.
+- `That username is taken.`
+  - **Cause:** The username is used, in any capital letters, by any learner or teacher of any organisation, even a deleted one.
+  - **What to do:** Choose another. A short code for your school at the front avoids clashes.
+- `The teacher couldn't be added. Try again.`, `The learner couldn't be added. Try again.`, `The details couldn't be saved. Try again.` and `The password couldn't be changed. Try again.`
+  - **Cause:** The save did not go through, with no more specific reason.
+  - **What to do:** Try again. If it repeats, send the wording to whoever runs your deployment.
+- `You don't have permission to add teachers.`, `You don't have permission to edit learners.` and `You don't have permission to reset passwords.`
+  - **Cause:** Your role is not allowed that action.
+  - **What to do:** Ask an account with the right role.
+- `That school no longer exists. Close this and try again.`, `That school or class no longer exists. Close this and try again.`, `That learner no longer exists. Close this and try again.` and `That account no longer exists. Close this and try again.`
+  - **Cause:** The school, class, learner or account was deleted, or belongs to another organisation, since you opened the list.
+  - **What to do:** Close the form and reload the list.
+- `Some of the information isn't valid. Close this and try again.`
+  - **Cause:** **Reset password** was refused for a reason the form cannot show beside a field.
+  - **What to do:** Close the form, reload the list and try again.
+- `The learner's details couldn't be loaded.`
+  - **Cause:** **Edit details** could not read the learner. The form shows only a **Close** button.
+  - **What to do:** Close it and try again.
+- `The current class is no longer available. Choose another one to save.` and `A curriculum marked (no longer available) must be removed before you save.`
+  - **Cause:** The learner's class or a curriculum was deleted after it was assigned.
+  - **What to do:** Choose another class, or remove the marked curriculum, then **Save**.
+
 ## Syncing
 
 - `There are no students to sync.`
   - **Cause:** **Sync Students** on a school with no learners.
   - **What to do:** Upload learners first.
+- `There are no teachers to sync.`
+  - **Cause:** **Sync Teachers** on a school with no teacher logins.
+  - **What to do:** Add or upload teachers first.
 - `The service is temporarily unavailable. Try again in a few minutes. Reference: E-…`
-  - **Cause:** **Sync Content** or **Sync Students** could not reach the learner server.
+  - **Cause:** **Sync Content**, **Sync Students** or **Sync Teachers** could not reach the learner server.
   - **What to do:** Wait and try again. If it repeats, give the reference code to whoever runs the deployment.
 - A sync button you expect is not on the screen (no message)
-  - **Cause:** Only an Admin, an Organisation Admin and a platform account that has chosen an organisation see **Sync Content** and **Sync Students**. If your role is one of those and you were signed in before it gained the buttons, your sign-in still carries the old permissions, for up to an hour.
+  - **Cause:** Only an Admin, an Organisation Admin and a platform account that has chosen an organisation see **Sync Content**, **Sync Students** and **Sync Teachers**. If your role is one of those and you were signed in before it gained the buttons, your sign-in still carries the old permissions, for up to an hour.
   - **What to do:** Sign out and sign back in. See [Staff accounts and roles](/admin-guide/staff-and-roles#syncing-who-can-do-it).
 - `You don't have permission to do that.`
   - **Cause:** Your role is not allowed the action. Buttons you are not allowed to use are normally hidden, so you meet this only when an action reaches the server some other way.

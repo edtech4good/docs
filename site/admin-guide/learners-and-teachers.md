@@ -1,6 +1,6 @@
 ---
 title: Add learners and teachers
-description: How to add one learner at a time, or many learners and teachers from a spreadsheet, every column of the learner sheet, the rules that refuse a row, and the Sync Students step that makes the accounts work in the learning app.
+description: How to add one learner or one teacher at a time, or many from a spreadsheet, every column of the learner sheet, the rules that refuse a row, the Sync Students and Sync Teachers steps, and the Manage menu to edit, reset, disable or delete an account.
 ---
 
 # Add learners and teachers
@@ -8,13 +8,16 @@ description: How to add one learner at a time, or many learners and teachers fro
 *Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026. The **Add one learner** section was checked against
 [`edtech-lms-ui` 206b525](https://github.com/edtech4good/edtech-lms-ui/commit/206b525) and
 [`edtech-lms-api` c4f9a8a](https://github.com/edtech4good/edtech-lms-api/commit/c4f9a8a)
-on 8 Nov 2026.*
+on 8 Nov 2026. The **Add one teacher** and **Manage** sections were checked against
+[`edtech-lms-ui` 0b4bf9e](https://github.com/edtech4good/edtech-lms-ui/commit/0b4bf9e) and
+[`edtech-lms-api` 33c357a](https://github.com/edtech4good/edtech-lms-api/commit/33c357a)
+on 9 Nov 2026.*
 
-You can add **one learner at a time** with a form, or add **many people at
-once** by uploading a **CSV file**, one row per person. Teachers are added by
-upload only. A CSV is a plain spreadsheet export: in Excel or Google Sheets
-choose *Save as* or *Download* and pick CSV. There are two uploads, because they
-make different things:
+You can add **one learner or one teacher at a time** with a form, or add **many
+people at once** by uploading a **CSV file**, one row per person. A CSV is a
+plain spreadsheet export: in Excel or Google Sheets choose *Save as* or
+*Download* and pick CSV. There are two uploads, because they make different
+things:
 
 - **Upload Users**, on the **Learners** page, creates **learners**.
 - **Upload Teachers**, on the **Teachers** page, creates **teacher logins**.
@@ -24,6 +27,12 @@ learning app, a second step, **Sync Students**, copies them to the learner
 server. Skipping it is the most common reason a new learner "cannot log in".
 The form for one learner sends that learner to the learner server as soon as you
 save, so it usually needs no second step. See [Add one learner](#add-one-learner).
+Teachers have a step of their own, **Sync Teachers**; see
+[Add one teacher](#add-one-teacher) and [Sync Teachers](#sync-teachers).
+
+Once an account exists, each row on the Learners and Teachers lists has a
+**Manage** menu to change it. See
+[Manage a learner or a teacher](#manage-a-learner-or-a-teacher).
 
 ## Before you start
 
@@ -34,7 +43,7 @@ You need:
 - for learners, a **class** under **People › Classes** (a class is required for
   every learner row that is not a teacher);
 - an account that is allowed to upload or add: Organisation Admin, Admin or Super
-  Admin. If **Add learner**, **Upload Users** or **Upload Teachers** is greyed out, you are
+  Admin. If **Add learner**, **Upload Users**, **+ Add teacher** or **Upload Teachers** is greyed out, you are
   signed in with a platform account that has not chosen an organisation. Use
   the switcher at the top of the menu first. See
   [Signing in and finding your way](/admin-guide/signing-in#the-organisation-switcher).
@@ -263,7 +272,9 @@ do not email it. Give each learner their password in person or on a printed
 card. The same goes for a password made with the **Add learner** form: write it
 on a card and hand it over, rather than sending it in a message.
 
-To change a password later, use the edit sheet, below.
+To change a password later, use **Reset password** in the row's
+[Manage menu](#manage-a-learner-or-a-teacher), and hand the new one over the same
+way.
 
 ### Teachers in the learner sheet
 
@@ -272,9 +283,82 @@ learning app**: the learner list shows `True` in its **Is Teacher** column, the
 row does not need a class, and it is recorded as an online account. This is how
 a teacher is made who signs in to the learner server.
 
-## Add teacher logins
+## Add one teacher
 
-**Upload Teachers** is simpler. It makes a login, nothing else.
+Use this when you have a teacher or two to add. For a school's whole staff list,
+use the sheet in [Add teacher logins from a sheet](#add-teacher-logins-from-a-sheet).
+A teacher added here is a login for the learning app: a username, a password and
+a school, and nothing else.
+
+1. Go to **People › Teachers**.
+2. Choose **+ Add teacher**, next to **Upload Teachers**. A form opens at the
+   right of the page. The button is greyed out in the same cases as **Upload
+   Teachers**.
+3. Fill in the form (the fields are below) and choose **Add teacher**. The button
+   reads **Adding…** while it saves.
+4. A panel headed **Teacher added** shows the username and the password. Copy or
+   write them down, then choose **Done**.
+
+### The teacher fields
+
+A star in the form marks a required field.
+
+- **Username** (required). 2 to 16 English letters or numbers. The form checks it
+  as you type, and a line under the field says *Available. Teachers use this to
+  sign in on the app.* or *That username is taken.* If the characters or the
+  length are not allowed you see *Use 2 to 16 English letters or numbers.* The
+  same rules apply as for a learner: a username counts as taken **whatever its
+  capital letters**, and a name that any organisation has used for a learner or a
+  teacher, even one since deleted, cannot be used again.
+- **Password** (required). 8 to 32 characters with at least one letter and one
+  number, and no spaces. If it is wrong you see *Use 8 to 32 characters with at
+  least one letter and one number, and no spaces.* **Generate** and **Show**
+  (then **Hide**) work as in the learner form.
+- **School** (required). Choose from the list. If you have only one school it is
+  already chosen. If the schools cannot be loaded you see *The schools couldn't
+  be loaded.* and a **Try again** link. If you leave it empty you see *Choose a
+  school.*
+
+If you close the form after typing something, you are asked **Discard this
+teacher?** with *This teacher hasn't been added yet.* Choose **Discard**, or
+**Keep editing** to go back.
+
+### After you choose Add teacher
+
+If the server refuses something, the message appears under the field it belongs
+to, or at the top of the form. If the form says *Some of the information isn't
+valid. Check the form and try again.*, read each field's message and fix it.
+Other messages you may meet at the top of the form are *The teacher couldn't be
+added. Try again.*, *You don't have permission to add teachers.* and *That school
+no longer exists. Close this and try again.*
+
+The **Teacher added** panel shows the **Username** and the **Password**, each
+with a **Copy** button, and the line *Write it down or copy it now; it is not
+shown again.* Take it at its word: once you choose **Done** or close the panel,
+the password cannot be shown again. If a **Copy** button does not work you see
+*The copy didn't work. Select the username and copy it by hand.* (or *password*),
+and you can select the text and copy it yourself.
+
+Above them, one line says whether the teacher can sign in yet. It starts with the
+teacher's username, shown here as [Username]:
+
+- *[Username] can sign in on the app now with these details.* The teacher was
+  copied to the learner server as soon as you saved. Nothing more is needed.
+- *[Username] can't sign in yet: the learning server did not answer. Run Sync
+  Teachers for this school on the Schools screen.* The teacher is saved in the
+  admin, but the learning server did not answer. Run
+  [Sync Teachers](#sync-teachers) for the school.
+- *[Username] can sign in once the learning server next syncs.* The teacher is
+  saved and will be picked up at the learning server's next sync. You see this
+  line only when no learning server is connected to the admin.
+
+Give the username and password to the teacher in person or on a printed card, as
+described under [Passwords](#passwords).
+
+## Add teacher logins from a sheet
+
+**Upload Teachers** is simpler than the learner sheet. It makes a login, nothing
+else.
 
 1. Go to **People › Teachers**.
 2. Choose **Sample File** for the template, or write a CSV with two columns:
@@ -289,13 +373,12 @@ sheet is refused with **Duplicate teacher name not allowed**. A success reads
 **Teachers uploaded successfully**. Delete the filled sheet afterwards, as for
 learners.
 
-::: warning Teacher logins are not carried by Sync Students
-When we checked, **Sync Students sends learners only**. A login made with
-**Upload Teachers** stays in the admin and was not on the learner server
-afterwards, and the admin has no button that sends it there. If a teacher must
-sign in on the learner server, ask the people who run your deployment. The
-teacher account made through `is_teacher_acc` in the learner sheet does travel
-with Sync Students.
+::: warning Teacher logins from a sheet reach the learner server only through Sync Teachers
+**Sync Students sends learners only.** A login made with **Upload Teachers** stays
+in the admin until you run **Sync Teachers** for the school. Until then the
+teacher cannot sign in on the learner server. See
+[Sync Teachers](#sync-teachers). The teacher account made through
+`is_teacher_acc` in the learner sheet does travel with Sync Students.
 :::
 
 ## Sync Students
@@ -336,10 +419,174 @@ A school that uses a classroom server rather than the cloud one is loaded from a
 file instead. **Download Students**, next to Sync Students, produces a file of
 the school's learners for that purpose.
 
+## Sync Teachers
+
+**Sync Teachers** is the teachers' counterpart of Sync Students. It sits beside
+**Sync Students** on the school's row in **People › Schools**, with the same
+confirm (**Sure to sync?**). It is described in full in
+[Publish and sync](/admin-guide/publish-and-sync#sync-teachers). Run it after
+**Upload Teachers**, and whenever a message in this section tells you to.
+
+## Manage a learner or a teacher
+
+Each row on **People › Learners** and **People › Teachers** has a **Manage ▾**
+button in its **Actions** column. Choose it to open a short menu. The items you
+see depend on your role: an item you are not allowed to use is not shown, and if
+none is allowed there is no **Manage** button. An account that is disabled shows a
+**Disabled** tag beside its username.
+
+| List | Menu items |
+|---|---|
+| **Learners** | **Edit details**, **Reset password**, **Disable** (or **Enable**) |
+| **Teachers** | **Reset password**, **Disable** (or **Enable**), then a divider and **Delete** |
+
+**Edit details** and **Reset password** open a form at the right of the page.
+**Disable**, **Enable** and **Delete** ask first.
+
+Most of these changes are sent to the learner server as soon as you save. The
+message after saving says how that went. When it says the learning server did not
+answer, the change is saved in the admin and is not lost: run the sync it names
+for the school. The messages are listed on
+[When something is refused](/admin-guide/when-something-is-refused#saved-but-the-learning-server-did-not-answer).
+
+### Edit details (learners)
+
+**Edit details** changes one learner's details. It is the first item in a
+learner's menu. The username and the school are shown but cannot be changed here.
+
+1. Choose **Manage** on the learner's row, then **Edit details**. The form shows
+   a placeholder while it loads. If it cannot load you see *The learner's details
+   couldn't be loaded.* (or *That learner no longer exists. Close this and try
+   again.*) and a **Close** button.
+2. Change what you need. The fields are **First name** (required), **Last name**,
+   **Gender** (required, **Female** or **Male**), **Date of birth**, **Class**
+   (required, from the school's classes) and **Curriculum** (required, one or
+   more of the school's curricula). Each has the rule and message it has in the
+   [Add one learner](#the-fields) form. Leaving the curriculum empty gives
+   *Choose at least one curriculum.*
+3. Choose **Save**. The button reads **Saving…**.
+
+If the learner's class or a curriculum has been deleted since, the form shows
+*(no longer available)* and tells you what to do: *The current class is no longer
+available. Choose another one to save.* or *A curriculum marked (no longer
+available) must be removed before you save.* If the school's classes or
+curricula cannot be loaded you see *This school's classes or curricula couldn't be
+loaded.* and a **Try again** link.
+
+If you close the form after changing something you are asked **Discard your
+changes?** with *The changes to this learner's details haven't been saved.*
+Choose **Discard**, or **Keep editing**.
+
+After saving, the form closes, the list reloads and a message says how it went:
+
+- **Success**: *[Name]'s details are saved.* The change is on the learner server.
+- **Saved**: *The details were saved, but the learning server did not answer. Run
+  Sync Students for this school on the Schools screen.* (or the message about a
+  class or curriculum the learning server does not have yet; see
+  [When something is refused](/admin-guide/when-something-is-refused#saved-but-the-learning-server-did-not-answer)).
+- **Saved**: *Saved. The learning server gets the change at its next sync.* You
+  see this only when no learning server is connected to the admin.
+
+Other messages at the top of the form are *The details couldn't be saved. Try
+again.* and *You don't have permission to edit learners.*
+
+### Reset password (learners and teachers)
+
+**Reset password** gives an account a new password. It is the first item in a
+learner's menu and in a teacher's.
+
+1. Choose **Manage** on the row, then **Reset password**. The form shows the
+   **Username**, which you cannot change.
+2. Type a new **Password** or choose **Generate**. The rule is the one for new
+   accounts: 8 to 32 characters with at least one letter and one number, and no
+   spaces. **Show** (then **Hide**) lets you read it.
+3. Choose **Save**. The button reads **Saving…**.
+
+If the account is disabled, the form says *This account is disabled. It can't
+sign in until you enable it.* You can still reset the password; the account stays
+disabled.
+
+A panel headed **Password changed** then shows the **Username** and the **New
+password**, each with a **Copy** button, and the line *Write it down or copy it
+now; it is not shown again.* As with a new account, once you choose **Done** or
+close the panel the password cannot be shown again. Hand it over as described
+under [Passwords](#passwords).
+
+Above them, one line says what the change means for signing in. Here [Username]
+is the account's username:
+
+- *[Username] can sign in with the new password now. Anyone signed in with the old
+  one has been signed out.* After a reset, **the old password stops working**,
+  and a person who was signed in with it is signed out.
+- *[Username] can sign in with the new password once you enable the account.
+  Anyone signed in with the old one has been signed out.* The account is
+  disabled.
+- For a learner: *The old password still works on the learning server.* followed
+  by the reason, such as *The password was saved, but the learning server did not
+  answer. Run Sync Students for this school on the Schools screen.* For a teacher:
+  *The learning server did not answer, so the old password still works there. Run
+  Sync Teachers for this school on the Schools screen.* Until you run the sync, the
+  person can still sign in with the **old** password.
+- *The learning server gets the new password at its next sync.* You see this only
+  when no learning server is connected to the admin.
+
+Mistakes in the form appear under the field. Other messages at the top are *The
+password couldn't be changed. Try again.*, *You don't have permission to reset
+passwords.* and *That account no longer exists. Close this and try again.*
+
+A learner who was signed in on the app when the password changed lands on the
+sign-in screen. The app does not say why, so tell the learner their password was
+changed.
+
+### Disable and Enable (learners and teachers)
+
+A disabled account cannot sign in. Its progress is kept, and the account stays in
+its list with a **Disabled** tag. Use it instead of deleting an account whose
+owner has progress.
+
+1. Choose **Manage** on the row, then **Disable**. A box asks *Disable [Username]?
+   They won't be able to sign in. Their progress is kept.* with **Disable** and
+   **Cancel**.
+2. Choose **Disable**. The row gets its **Disabled** tag, and a message says how it
+   went.
+
+To undo it, choose **Manage** and then **Enable**. The box asks *Enable
+[Username]? They can sign in again.* with **Enable** and **Cancel**.
+
+When the learning server was told, anyone signed in with the account is signed
+out, and a learner who was signed in lands on the sign-in screen. The app does
+not say why. Results a learner had queued while offline are kept on the device and
+are sent when that learner signs in again; if the account stays disabled they
+stay on the device.
+
+The message after the change is one of these, with [Username] the account's
+username:
+
+- **Success**: *[Username] is disabled.* or *[Username] can sign in again.* The
+  learner server has the change.
+- **Saved**: *[Username] is disabled on central. …* (or *enabled*) followed by
+  *The change was saved, but the learning server did not answer. Run Sync
+  Students for this school on the Schools screen.* For a teacher the message is
+  *[Username] is disabled on central, but the learning server did not answer. Run
+  Sync Teachers for this school on the Schools screen.* The admin has the change
+  and the learner server does not yet, so the person may still be able to sign
+  in. Run the sync it names. ("Central" here means the admin's own records.)
+- **Saved**: *[Username] is disabled. The learning server gets the change at its
+  next sync.* You see this only when no learning server is connected to the admin.
+
+### Delete (teachers)
+
+**Delete** is the last item in a teacher's menu, below a divider and in red. It
+asks **Sure to delete?**; confirm to go on. A success reads **Teacher deleted
+sucessfully** (the word "successfully" is misspelled on screen), and the teacher
+leaves the list. To stop a teacher signing in but keep the account, use **Disable** instead.
+A learner's menu has no Delete.
+
 ## Change learners already added
 
-You edit learners by **downloading** them as a sheet, changing it, and
-**uploading** it back.
+To change one learner, use **Edit details** in the
+[Manage menu](#manage-a-learner-or-a-teacher). To change many at once, **download**
+them as a sheet, change it, and **upload** it back.
 
 1. Go to **People › Learners** and open the **Edit Student Tab**.
 2. Choose a country, a school or a single student (at least one) and choose
