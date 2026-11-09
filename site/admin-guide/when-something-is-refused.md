@@ -138,14 +138,14 @@ in the admin and is not lost**. What failed is the copy to the learner server, s
 until you run the sync the notice names, that server still has the old state. The
 person may still be able to sign in with the old password, or after a disable.
 
-- `[Name] can't sign in yet: the learning server did not answer. Run Sync Students for this school on the Schools screen.` (a learner added with the form)
-  - **Cause:** The learner is saved, but the learner server did not answer or refused the learner.
-  - **What to do:** Run **Sync Students** for the school. If that does not fix it, run **Sync Content** first, then Sync Students again.
+- `[Name] can't sign in yet. The account was saved, but the learning server did not answer. Run Sync Students for this school on the Schools screen.` (a learner added with the form)
+  - **Cause:** The learner is saved, but the learner server did not answer.
+  - **What to do:** Run **Sync Students** for the school.
 - `[Name] can't sign in yet: the learning server did not answer. Run Sync Teachers for this school on the Schools screen.` (a teacher added with the form)
   - **Cause:** The teacher is saved, but the learner server did not answer.
   - **What to do:** Run **Sync Teachers** for the school. See [Sync Teachers](/admin-guide/publish-and-sync#sync-teachers).
-- `Saved, but the learning server doesn't have this class or curriculum yet. Run Sync Content, then Sync Students for this school.`
-  - **Cause:** The learner is saved, but the learner server does not yet have the learner's class or curriculum, so it refused the learner. You can see it after **Add learner** and **Edit details**.
+- `Saved, but the learning server doesn't have this class or curriculum yet. Run Sync Content, then Sync Students for this school.` (after **Add learner** it follows *[Name] can't sign in yet.* on the same line)
+  - **Cause:** The learner is saved, but the learner server does not yet have the learner's class or curriculum, so it refused the learner. Any change that sends a learner to the learner server can show it: **Add learner**, **Edit details**, **Disable** or **Enable**, and **Reset password**.
   - **What to do:** Run **Sync Content**, then **Sync Students** for the school, in that order.
 - `The details were saved, but the learning server did not answer. Run Sync Students for this school on the Schools screen.` (**Saved**, after Edit details)
   - **Cause:** The edit is in the admin; the learner server has the old details.

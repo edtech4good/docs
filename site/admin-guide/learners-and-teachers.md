@@ -125,14 +125,16 @@ learner's name, shown here as [Name]:
 
 - *[Name] can sign in now with these details.* The learner was copied to the
   learner server as soon as you saved. Nothing more is needed.
-- *[Name] can't sign in yet: the learning server did not answer. Run Sync
-  Students for this school on the Schools screen.* The learner is saved in the
-  admin, but the learning server either did not answer or refused the learner.
-  The most common reason is that the learner's class is not on the learning
-  server yet. Run [Sync Students](#sync-students) for the school. If that does
-  not fix it, run
+- *[Name] can't sign in yet. The account was saved, but the learning server did
+  not answer. Run Sync Students for this school on the Schools screen.* The
+  learner is saved in the admin, but the learning server did not answer. Run
+  [Sync Students](#sync-students) for the school.
+- *[Name] can't sign in yet. Saved, but the learning server doesn't have this
+  class or curriculum yet. Run Sync Content, then Sync Students for this
+  school.* The learner is saved, but the learning server refused the learner
+  because it does not have the learner's class or curriculum yet. Run
   [Sync Content](/admin-guide/publish-and-sync#sync-content) first, then Sync
-  Students again.
+  Students.
 - *[Name] can sign in once the learning server next syncs.* The learner is saved
   and will be picked up at the learning server's next sync. You see this line
   only when no learning server is connected to the admin. Learners for a
@@ -446,7 +448,9 @@ none is allowed there is no **Manage** button. An account that is disabled shows
 Most of these changes are sent to the learner server as soon as you save. The
 message after saving says how that went. When it says the learning server did not
 answer, the change is saved in the admin and is not lost: run the sync it names
-for the school. The messages are listed on
+for the school. One change is not sent: **Delete** on a teacher. After deleting a
+teacher, run **Sync Teachers** for the school, or they can still sign in to the
+app until you do. The messages are listed on
 [When something is refused](/admin-guide/when-something-is-refused#saved-but-the-learning-server-did-not-answer).
 
 ### Edit details (learners)
@@ -492,8 +496,8 @@ again.* and *You don't have permission to edit learners.*
 
 ### Reset password (learners and teachers)
 
-**Reset password** gives an account a new password. It is the first item in a
-learner's menu and in a teacher's.
+**Reset password** gives an account a new password. It is the second item in a
+learner's menu, after **Edit details**, and the first in a teacher's.
 
 1. Choose **Manage** on the row, then **Reset password**. The form shows the
    **Username**, which you cannot change.
@@ -577,9 +581,11 @@ username:
 ### Delete (teachers)
 
 **Delete** is the last item in a teacher's menu, below a divider and in red. It
-asks **Sure to delete?**; confirm to go on. A success reads **Teacher deleted
+asks **Sure to delete?** with **OK** and **Cancel**; choose **OK** to go on. A success reads **Teacher deleted
 sucessfully** (the word "successfully" is misspelled on screen), and the teacher
-leaves the list. To stop a teacher signing in but keep the account, use **Disable** instead.
+leaves the list. The learner server is not told at once: run **Sync Teachers** for
+the school after deleting a teacher, or they can still sign in to the app until you
+do. To stop a teacher signing in but keep the account, use **Disable** instead.
 A learner's menu has no Delete.
 
 ## Change learners already added

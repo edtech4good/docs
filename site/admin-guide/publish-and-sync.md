@@ -211,6 +211,9 @@ teachers only, and only the school you chose.
   got the change. If it says the learning server did not answer, it also says
   *Run Sync Teachers for this school on the Schools screen.* When the change did
   reach the learner server, you do not need to run it.
+- After **Delete** on a teacher. Deleting a teacher is not sent to the learner
+  server at once, so run Sync Teachers for that school, or the teacher can still
+  sign in to the app until you do.
 
 If the school has no teachers you get **There are no teachers to sync.** If the
 learner server cannot be reached you get **The service is temporarily unavailable.

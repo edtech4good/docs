@@ -60,6 +60,9 @@ magnifying glass beside *School Name* searches by name, and the funnel beside
 - **Sync Students** is on this row too, for an Admin or an Organisation Admin
   (and for a platform account acting as your organisation). See
   [Add learners and teachers](/admin-guide/learners-and-teachers#sync-students).
+- **Sync Teachers** is beside it, for the same accounts: it sends the school's
+  teacher logins to the learning server. See
+  [Sync Teachers](/admin-guide/publish-and-sync#sync-teachers).
 
 ### Add a school
 
