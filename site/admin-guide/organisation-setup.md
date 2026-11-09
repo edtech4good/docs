@@ -153,7 +153,7 @@ you then see only your own countries. Your organisation's staff can view the
 list. The **Create**, **Edit** and **Delete** buttons are not shown to an
 Organisation Admin. An Admin account is shown them, but the server refuses
 every one of them with *You don't have permission to do that.* If you need a
-country that is not on the list, ask the people who run your deployment.
+country that is not on the list, ask the people who run the server.
 
 **Expected Usage** is a number of minutes: the time you hope learners spend in
 the app. The [Impact](/admin-guide/reports#impact) report draws it as the
@@ -180,6 +180,45 @@ To add one, choose **Create**, type the tag, and choose **Submit**. You see
   underscores, so `two words` and `a-b-c` are refused.
 - **Tags are saved in lower case.** `Easy` is stored as `easy`.
 - A tag has to be new within your organisation.
+
+## Make learners pass the quiz to finish a lesson
+
+By default a learner who has done a lesson's quiz has finished that part of the
+lesson, whatever the score. Each organisation can instead require a pass.
+
+The switch is in the organisation's own record, so it is set per organisation:
+turning it on for one organisation changes nothing for another. Only platform
+accounts see the **Organisations** screen (under **Platform** in the menu), so
+if you run a single organisation, ask the people who run the server to change
+it.
+
+1. Go to **Organisations** and choose **Edit** on the organisation.
+2. Turn on **Learners must pass the quiz to finish a lesson**. The switch is
+   only on the edit form, not when an organisation is first created.
+3. Choose **Save changes**.
+4. Choose the organisation in the switcher and run
+   [Sync Content](/admin-guide/publish-and-sync#sync-content). The setting
+   reaches learners only after that.
+
+The help line under the switch says: *When on, a failed quiz can be retried as
+many times as needed. The lesson isn't complete until it is passed. Applies to
+learners after the next Sync Content.* In practice:
+
+- A quiz attempt that does not pass earns **no points**. A pass earns the quiz's
+  points, on any attempt.
+- The lesson is **not finished until the quiz is passed**, even if the learner has
+  watched the video and done the practice.
+- A learner can **retry as often as they like**.
+- The rule is **not retroactive on its own**. Learners who had already finished
+  a lesson without passing its quiz keep that result until their points are
+  recalculated, which the people who run the server do.
+- It can only hold a lesson back when the lesson's pass mark needs the quiz's
+  points. If the video and practice alone reach the lesson's pass mark, the
+  lesson finishes without passing the quiz. See
+  [how a lesson earns its points](/reference/lessons-and-question-types#how-a-lesson-earns-its-points)
+  for the pass mark.
+
+If you turn it off again, run Sync Content again for it to reach learners.
 
 ## When a save does nothing
 
