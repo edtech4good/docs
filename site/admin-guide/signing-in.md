@@ -135,7 +135,7 @@ The platform's own accounts are different. Their tile at the top is a **switcher
 it opens a list with **All organisations** (the *platform view*, which reads
 across everything) and each organisation by name. Choosing one makes the
 account act as that organisation. Several steps in this guide, such as publishing,
-Sync Content and Sync Students, only work for a platform account once it has
+Sync Content, Sync Students and Sync Teachers, only work for a platform account once it has
 chosen an organisation. If you are doing this for an organisation, choose it
 first.
 
@@ -155,18 +155,19 @@ sign back in, or usually within an hour.
 - **Organisation Admin** is the person who runs one organisation. It sees
   everything in the menu for that organisation, including **Staff accounts** and
   **Roles**, and can publish and retire curricula and upload learners and
-  teachers. It also sees **Sync Content** and the **Sync Students** button,
-  which work for its own organisation only, and it can only view Countries.
+  teachers. It also sees **Sync Content** and the **Sync Students** and **Sync Teachers**
+  buttons, which work for its own organisation only, and it can only view Countries.
 - **Admin** is a trusted member of an organisation's staff. It has the same
   content and people menus, but no **Staff accounts** or **Roles**. It sees
-  **Sync Content** and the **Sync Students** button, for its own organisation.
+  **Sync Content** and the **Sync Students** and **Sync Teachers** buttons, for its
+  own organisation.
   It is shown the buttons for Countries, but changing a country
   is for the platform account and the server refuses it. See
   [Set up your organisation](/admin-guide/organisation-setup#countries) and
   [Staff accounts and roles](/admin-guide/staff-and-roles).
 - **Teacher** is a read-only staff login: it can look at curricula, schools and
-  reports and change none of them. It sees neither sync button. Teachers
-  themselves use the learning app, not this admin.
+  reports and change none of them. It sees none of the three sync buttons (Sync Content, Sync Students and
+  Sync Teachers). Teachers themselves use the learning app, not this admin.
 - **Super Admin** is for the people who run the deployment. It is a platform
   account with no organisation of its own. It sees the **Platform** group and
   the switcher, and can act as any organisation.

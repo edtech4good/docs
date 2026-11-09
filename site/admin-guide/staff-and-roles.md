@@ -95,15 +95,15 @@ do.
 - publish and retire a curriculum;
 - add, change and delete schools, classes, subjects, tags and fees records;
 - upload and edit learners and teacher logins;
-- run **Sync Content** and **Sync Students**, each for their own organisation
-  (see [Syncing](#syncing-who-can-do-it) below).
+- run **Sync Content**, **Sync Students** and **Sync Teachers**, each for their own
+  organisation (see [Syncing](#syncing-who-can-do-it) below).
 
 Only **Organisation Admin** can:
 
 - add, change and delete staff accounts;
 - see the **Roles** list.
 
-**Teacher** can do nothing beyond the first list. It cannot run either sync.
+**Teacher** can do nothing beyond the first list. It cannot run any of the syncs.
 
 Nobody who works inside an organisation can add or change a country or an
 organisation. Notes on those.
@@ -121,7 +121,7 @@ organisation. Notes on those.
   and in addition manages staff accounts. It is the role to give the person in
   charge of the organisation's setup.
 - **Admin** builds and publishes content and manages schools, learners and
-  teachers, and runs the two syncs for its organisation. It cannot manage
+  teachers, and runs the three syncs for its organisation. It cannot manage
   staff.
 - **Teacher** is a read-only login. It can look at content, schools and reports
   and change nothing. A Teacher account cannot list learners, so on report pages
@@ -146,8 +146,8 @@ platform account, so you cannot create, edit or delete a role.
 
 ## Syncing: who can do it
 
-Two jobs copy your work to the learner server. They are described in
-[Publish and sync](/admin-guide/publish-and-sync) and
+Three jobs copy your work to the learner server. They are described in
+[Publish and sync](/admin-guide/publish-and-sync) (Sync Content and Sync Teachers) and
 [Add learners and teachers](/admin-guide/learners-and-teachers#sync-students).
 Who can start them:
 
@@ -155,8 +155,9 @@ Who can start them:
 |---|---|---|
 | **Sync Content** | A button at the top of the **Curriculum list** | An **Admin** or an **Organisation Admin**, for their own organisation; the platform account once it has chosen your organisation |
 | **Sync Students** | On a school's row in **People › Schools** | The same people |
+| **Sync Teachers** | On a school's row in **People › Schools**, beside Sync Students | The same people |
 
-A **Teacher** sees neither button.
+A **Teacher** sees none of the buttons.
 
 Each sync moves only the organisation of the account that runs it. **Sync
 Content** sends your organisation's published curricula. **Sync Students** sends
