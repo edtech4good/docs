@@ -110,8 +110,9 @@ publishing, or *Retired* when you have taken it away from learners.
 Schools reach the learning app in one of two ways:
 
 - **Online schools.** Learners sign in over the internet to the cloud learner
-  server. Publishing sends content to that server, and learner accounts are
-  copied to it with **Sync Students**.
+  server. Publishing sends content to that server, and so does saving a school or
+  a class. Learner accounts you add one at a time are copied when you save them;
+  accounts from a sheet are copied with **Sync Students**.
 - **Offline schools.** Learners use a small classroom server on the school's
   own network, with no internet needed during the lesson. The classroom server
   holds a copy of the content and the learner accounts, and passes progress back

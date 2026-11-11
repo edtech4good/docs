@@ -5,7 +5,10 @@ description: How to create and edit the schools, classes, subjects and tags your
 
 # Set up your organisation
 
-*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026.*
+*Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026. The advice on school names, on what is sent to the learner server when you save, and on the quiz-pass setting was checked against
+[`edtech-lms-ui` ca8d377](https://github.com/edtech4good/edtech-lms-ui/commit/ca8d377) and
+[`edtech-lms-api` 7737d6b](https://github.com/edtech4good/edtech-lms-api/commit/7737d6b)
+on 11 Nov 2026.*
 
 Before you add a single learner, a handful of records have to exist: the
 **schools**, the **classes** in them, the **countries** and **curricula** those
@@ -20,7 +23,7 @@ read "school" as "department" and "class" as "cohort". Nothing else changes.
 
 | You want to add | These must exist first |
 |---|---|
-| A **learner** | A school that uses at least one curriculum, and a class in that school |
+| A **learner** | A school that uses at least one **published** curriculum, and a class in that school |
 | A **teacher login** | A school |
 | A **class** | A school |
 | A **school** | A country linked to your organisation, and a curriculum linked to that country |
@@ -85,23 +88,34 @@ The rules:
   stop, comma, hyphen, ampersand or apostrophe shows the warning *Special
   characters are not allowed*, and **Submit** then answers **Invalid Input** and
   saves nothing.
-- **Use a name that is not already in use.** If it is, the save does nothing.
-  See [When a save does nothing](#when-a-save-does-nothing).
+- **Use a name that no school has ever had.** School names are unique across the
+  whole platform, not only in your organisation, and a deleted school keeps its
+  name. If another school has the name you see *That school already exists.*
+  under **School Name**; if a deleted school had it you see *A school with this
+  name existed before. Choose another name.* Nothing is saved until you choose
+  another name.
 - **If your curriculum is missing from the list**, it is not linked to the
   country you chose. Edit the curriculum and give it that country.
+
+A school you create is sent to the learner server when you save it, so you do
+not have to run **Sync Content** before adding learners to it. If that send
+fails, a **Saved** warning says so and tells you to run **Sync Content**. See
+[What is sent by itself](/admin-guide/publish-and-sync#what-is-sent-by-itself).
 
 ### Change a school
 
 Choose **Edit** on the row. The form has the same three fields plus **UI
 theme**, **Kids** or **Corporate**, which chooses the look the learning app
-shows that school's learners. Choose **Submit** to save.
+shows that school's learners. Choose **Submit** to save. A change is sent to the
+learner server when you save, in the same way.
 
 ### Delete a school
 
 Choose **Delete** and confirm **Sure to delete?** with **OK**. A school that
 still has learners cannot be deleted. The screen then says only *Some of the
 information isn't valid.*, and the reason is that the school still has learners.
-Move or remove the learners first. A deleted school's name can be used again.
+Move or remove the learners first. A deleted school's name **cannot** be used
+again, by any organisation.
 
 ## Classes
 
@@ -121,6 +135,8 @@ screen calls a class a "standard" in some messages; it is the same thing.
   stop the save, but keep the name plain anyway, because it appears in reports.
 - **Edit** changes the name or moves the class to another school. **Delete**
   asks **Sure to delete?** and shows **Standard deleted sucessfully**.
+- A class you create, change or delete is sent to the learner server when you
+  save it, as a school is.
 
 A class that still has learners in it can't be deleted. The admin refuses and
 says how many, for example *That class has 3 learners and can't be deleted. Move
@@ -199,13 +215,15 @@ it.
 2. Turn on **Learners must pass the quiz to finish a lesson**. The switch is
    only on the edit form, not when an organisation is first created.
 3. Choose **Save changes**.
-4. Choose the organisation in the switcher and run
-   [Sync Content](/admin-guide/publish-and-sync#sync-content). The setting
-   reaches learners only after that.
+
+The setting is sent to the learner server when you save, so you do not run
+[Sync Content](/admin-guide/publish-and-sync#sync-content) for it. If the send
+fails, a **Saved** warning tells you to run it.
 
 The help line under the switch says: *When on, a failed quiz can be retried as
 many times as needed. The lesson isn't complete until it is passed. Applies to
-learners after the next Sync Content.* In practice:
+quizzes learners take after this is saved. Earlier results are not
+recalculated.* In practice:
 
 - A quiz attempt that does not pass earns **no points**. A pass earns the quiz's
   points, on any attempt.
@@ -221,19 +239,22 @@ learners after the next Sync Content.* In practice:
   [how a lesson earns its points](/reference/lessons-and-question-types#how-a-lesson-earns-its-points)
   for the pass mark.
 
-If you turn it off again, run Sync Content again for it to reach learners.
+If you turn it off again, it applies in the same way, from the next quiz a learner
+takes after you save.
 
 ## When a save does nothing
 
 Two kinds of refusal on these forms give you almost no explanation. Both leave
 you on the form with your typing still in it.
 
-**A name that already exists shows no message at all.** You choose **Submit**
-and nothing happens. This is the case for schools, classes, subjects and tags.
-The server did answer, with *That school already exists.*, *That standard
-already exists.*, *That subject already exists.*, *That question tag already
-exists.* or *That document tag already exists.*, but the admin does not show it.
-If a save does nothing, the name may already be in use; try a different name.
+**A name that already exists shows no message at all, for most records.** You
+choose **Submit** and nothing happens. This is the case for classes, subjects and
+tags. The server did answer, with *That standard already exists.*, *That subject
+already exists.*, *That question tag already exists.* or *That document tag
+already exists.*, but the admin does not show it. If a save does nothing, the
+name may already be in use; try a different name. **Schools are the exception:**
+a school name that is taken shows *That school already exists.* or *A school with
+this name existed before. Choose another name.* under **School Name**.
 
 **Anything else the server refuses shows one general notice**: a red **Error**
 saying *Some of the information isn't valid.* The notice does not say which

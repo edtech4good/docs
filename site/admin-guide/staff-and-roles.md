@@ -162,9 +162,10 @@ A **Teacher** sees none of the buttons.
 Each sync moves only the organisation of the account that runs it. **Sync
 Content** sends your organisation's published curricula. **Sync Students** sends
 the learners of the school whose row you used, and a school that belongs to
-another organisation is not found. Publishing a curriculum still pushes it to
-the learner server by itself, so you rarely need **Sync Content**. **Sync
-Students** is needed after every learner upload.
+another organisation is not found. Publishing a curriculum, and saving a school,
+a class or the quiz-pass switch, push to the learner server by themselves, so you
+rarely need **Sync Content**. **Sync Students** is needed after every learner
+upload.
 
 **If you were already signed in when your role gained these buttons, sign out
 and sign back in.** Your sign-in carries the permissions your role had when you
