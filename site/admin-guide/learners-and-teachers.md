@@ -125,6 +125,7 @@ A star in the form marks a required field.
     loaded.* with a **Try again** link, and the form will not save. If you choose
     **Add learner** while they are still loading you see *Wait for the curriculum's
     grades to load.*
+
   If you change the first curriculum, the grades are read again and a grade that
   does not belong to the new curriculum is cleared.
 
@@ -299,7 +300,7 @@ A few things about these rules:
 - **The upload dialog's school, curriculum, class and grade apply to every row.**
   To put learners in different classes or grades, upload one file per class and
   grade.
-- **The first curriculum must be published.** If it was never published, or was
+- **Every curriculum you choose must be published.** If one was never published, or was
   retired, the whole file is refused with *Publish [Curriculum] first, or choose
   another curriculum.* A file wrong on both rules (an unpublished curriculum and a
   missing grade) is refused with both sentences in one message, because an upload
@@ -527,8 +528,9 @@ learner's menu. The username and the school are shown but cannot be changed here
    list offers published curricula only; a curriculum the learner already has
    stays chosen and saves even if it has been retired since, and is marked
    *(retired)*, *(not published)* or *(no longer available)*. The **Grade** is
-   one of the grades of the learner's first curriculum, and the learner's own
-   grade is already chosen when it is one of them. A learner with no grade yet
+   one of the grades of the learner's current main curriculum (the first one
+   in the learner's list) while it is still chosen, otherwise of the first
+   curriculum now chosen. The learner's own grade is already chosen when it is one of them. A learner with no grade yet
    must be given one before you can save, unless the curriculum has only one
    grade, which is filled in for you.
 3. Choose **Save**. The button reads **Saving…**.
@@ -665,7 +667,8 @@ reads *There is no other school to move to.*
    curricula the new school has. The learner's current curricula that the new
    school also has are already chosen, and one that has been retired since stays
    chosen, marked *(retired)*; add or remove as needed.
-5. Choose the **Grade** (required), a grade of the first curriculum. It works as in
+5. Choose the **Grade** (required), a grade of the learner's current main curriculum while it is still chosen,
+   otherwise of the first curriculum now chosen. It works as in
    [Add one learner](#the-fields). The learner's own grade is already chosen when
    it is one of the options.
 6. Choose **Move**. The button reads **Moving…** while it works. **Cancel**, **Close**,

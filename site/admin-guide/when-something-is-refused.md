@@ -265,7 +265,7 @@ A move that is saved but not copied to the learner server is not a refusal; see 
 
 ## Curriculum and grade refusals
 
-These come from **Add learner**, **Edit details**, **Move to another school**, the **Upload Users** dialog and **Upload Edited Students**. In a form, the message appears under the field it belongs to. When a form has two things wrong at once, each message appears under its own field and the top of the form says `Check the highlighted fields.` An upload highlights nothing, so it refuses the whole file with every sentence in one message.
+These come from **Add learner**, **Edit details**, **Move to another school**, the **Upload Users** dialog and **Upload Edited Students**. In a form, the message appears under the field it belongs to. When a form has two things wrong at once, each message appears under its own field. An upload highlights nothing, so it refuses the whole file with every sentence in one message.
 
 - `Publish [Curriculum] first, or choose another curriculum.`
   - **Cause:** The curriculum was never published, or was retired, and learners can only be put in a published one. On Edit details, Move and Upload Edited Students only a curriculum you are **adding** is checked; one the learner already has is kept.

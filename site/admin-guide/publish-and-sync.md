@@ -172,7 +172,7 @@ for how learners connect, so a change to any school is sent the same way.
 | Create, edit or delete a school | The organisation's schools, classes and published curricula |
 | Create, edit or delete a class | The same |
 | Save the quiz-pass switch on the organisation (see [Make learners pass the quiz](/admin-guide/organisation-setup#make-learners-pass-the-quiz-to-finish-a-lesson)) | The same, with the setting |
-| Add, edit, move, reset the password of, disable, enable or delete one learner or one teacher | That one account |
+| Add, edit, move, reset the password of, disable or enable one learner or one teacher, or delete one teacher | That one account |
 
 Two things follow.
 
