@@ -166,7 +166,7 @@ person may still be able to sign in with the old password, or after a disable.
   - **Cause and what to do:** The same, with **Sync Teachers**.
 - `Moved, but the learning server did not answer. Run Sync Students for [School] on the Schools screen.` (**Moved**, after Move to another school; it stays on screen until you close it)
   - **Cause:** The move is saved in the admin; the learner server still has the learner in the old school.
-  - **What to do:** Run **Sync Students** for the new school.
+  - **What to do:** Run **Sync Students** for the new school. If the new school or its class was added since the last **Sync Content**, run **Sync Content** first, then **Sync Students** for the new school.
 - `Moved, but the learning server doesn't have this class or curriculum yet. Run Sync Content, then Sync Students for [School].` (**Moved**)
   - **Cause:** The move is saved, but the learner server does not yet have the new class or one of the curricula, so it refused the learner.
   - **What to do:** Run **Sync Content**, then **Sync Students** for the new school, in that order.
@@ -241,7 +241,7 @@ person may still be able to sign in with the old password, or after a disable.
   - **Cause:** You are signed in with a platform account that has not chosen an organisation.
   - **What to do:** See [Choosing an organisation](#choosing-an-organisation-platform-accounts).
 
-A move that is saved but not copied to the learner server is not a refusal; see the **Moved, but** messages in the next section.
+A move that is saved but not copied to the learner server is not a refusal; see the **Moved, but** messages in [Saved, but the learning server did not answer](#saved-but-the-learning-server-did-not-answer).
 
 ## Add, edit, reset and disable forms
 
@@ -277,6 +277,9 @@ Most field messages appear under the field they belong to. The others appear at 
 - `There are no students to sync.`
   - **Cause:** **Sync Students** on a school with no learners.
   - **What to do:** Upload learners first.
+- `Something went wrong on our side.` (after **Sync Students** for a school)
+  - **Cause:** The school, or one of its classes, was added after the last **Sync Content**, so the learner server does not have it yet. This often follows a move to a new school.
+  - **What to do:** Run **Sync Content** first, then **Sync Students** for the school.
 - `There are no teachers to sync.`
   - **Cause:** **Sync Teachers** on a school with no teacher logins.
   - **What to do:** Add or upload teachers first.

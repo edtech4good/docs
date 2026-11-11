@@ -317,7 +317,10 @@ A star in the form marks a required field.
   length are not allowed you see *Use 2 to 16 English letters or numbers.* The
   same rules apply as for a learner: a username counts as taken **whatever its
   capital letters**, and a name that any organisation has used for a learner or a
-  teacher, even one since deleted, cannot be used again.
+  teacher, even one since deleted, cannot be used again. The one exception is a
+  learner taken away with
+  [Remove](#remove-learners-who-have-never-signed-in), whose username is free
+  again.
 - **Password** (required). 8 to 32 characters with at least one letter and one
   number, and no spaces. If it is wrong you see *Use 8 to 32 characters with at
   least one letter and one number, and no spaces.* **Generate** and **Show**
@@ -454,8 +457,7 @@ none is allowed there is no **Manage** button. An account that is disabled shows
 Most of these changes are sent to the learner server as soon as you save. The
 message after saving says how that went. When it says the learning server did not
 answer, the change is saved in the admin and is not lost: run the sync it names
-for the school. **Remove** on a learner is different: it is refused unless the learning server confirms, so a removal is
-never half done on one side. The messages are listed on
+for the school. **Remove** on a learner is different: it is refused unless the learning server answers first. The messages are listed on
 [When something is refused](/admin-guide/when-something-is-refused#saved-but-the-learning-server-did-not-answer).
 
 ### Edit details (learners)
@@ -636,7 +638,9 @@ and a message says how it went:
 - **Moved**: *Moved, but the learning server did not answer. Run Sync Students for
   [School] on the Schools screen.* The move is saved in the admin and is not lost.
   This message stays on screen until you close it. Run **Sync Students** for the
-  new school.
+  new school. If the new school, or its class, was added since the last **Sync
+  Content**, run **Sync Content** first and then **Sync Students** for the new
+  school; otherwise Sync Students may fail with *Something went wrong on our side.*
 - **Moved**: *Moved, but the learning server doesn't have this class or curriculum
   yet. Run Sync Content, then Sync Students for [School].* Run them in that order.
 - **Moved**: *Moved to [School]. No learner server is set up here, so nothing was
