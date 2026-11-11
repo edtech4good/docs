@@ -1,6 +1,6 @@
 ---
 title: Publish and sync
-description: How to publish, re-publish and retire a curriculum, read the change summary, push content to learners with Sync Content, and what learners see and when.
+description: How to publish, re-publish and retire a curriculum, read the change summary, what the admin sends to learners by itself, when you still need Sync Content, Sync Students or Sync Teachers, and what learners see and when.
 ---
 
 # Publish and sync
@@ -11,12 +11,16 @@ description: How to publish, re-publish and retire a curriculum, read the change
 on 9 Nov 2026. The advice on **Delete** was checked against
 [`edtech-lms-ui` b7e40de](https://github.com/edtech4good/edtech-lms-ui/commit/b7e40de) and
 [`edtech-lms-api` 19784dc](https://github.com/edtech4good/edtech-lms-api/commit/19784dc)
+on 11 Nov 2026. What is sent by itself, and the advice on when to run each
+sync, were checked against
+[`edtech-lms-ui` ca8d377](https://github.com/edtech4good/edtech-lms-ui/commit/ca8d377) and
+[`edtech-lms-api` 7737d6b](https://github.com/edtech4good/edtech-lms-api/commit/7737d6b)
 on 11 Nov 2026.*
 
 Editing a curriculum does not change what learners see. **Publishing** does.
 This page covers the whole job: publishing, reading the change summary,
-re-publishing, retiring, deleting, and what to do when content does not reach
-learners.
+re-publishing, retiring, deleting, what the admin sends to the learner server by
+itself, and what to do when something does not reach learners.
 
 If you have not read it yet, the idea behind this page is on the
 [overview](/admin-guide/#editing-is-not-publishing).
@@ -156,10 +160,69 @@ learner server has the organisation's published curricula.*
 Treat Delete as final. If you might want the curriculum back, **Retire** it
 instead: publishing it again brings it back.
 
+## What is sent by itself
+
+You do not have to run a sync button after most changes. The admin sends them to
+the learner server when you save. The admin does not have a per-school setting
+for how learners connect, so a change to any school is sent the same way.
+
+| You do this | What is sent when you save |
+|---|---|
+| Publish, re-publish, retire or delete a curriculum | Your organisation's published curricula |
+| Create, edit or delete a school | The organisation's schools, classes and published curricula |
+| Create, edit or delete a class | The same |
+| Save the quiz-pass switch on the organisation (see [Make learners pass the quiz](/admin-guide/organisation-setup#make-learners-pass-the-quiz-to-finish-a-lesson)) | The same, with the setting |
+| Add, edit, move, reset the password of, disable or enable one learner or one teacher, or delete one teacher | That one account |
+
+Two things follow.
+
+- **A new school or class does not need Sync Content first.** If you add or move
+  a learner, or add a teacher, and the learner server does not yet have the school
+  or class, the admin sends the school and its classes and tries the account
+  once more. **Sync Students** and **Sync Teachers** do the same before they
+  report a problem.
+- **Uploading a sheet is not sent.** After **Upload Users**, **Upload Edited
+  Students** or **Upload Teachers**, the accounts are in the admin only. Run
+  [Sync Students](/admin-guide/learners-and-teachers#sync-students) or
+  [Sync Teachers](#sync-teachers) for each school.
+
+### When the send fails
+
+A save is never undone because the send failed. The change is saved in the admin,
+and a warning headed **Saved** says so. It stays on screen until you close it, and
+it closes by itself if you move to another page. After a school, a class or the
+quiz-pass switch, it reads:
+
+> Saved, but the learning server did not answer. Run Sync Content on the Curricula screen to send it again.
+
+If the learner server did answer but would not take the change, the sentence gives
+its reason first:
+
+> Saved, but the learning server did not accept it: [reason] Run Sync Content on the Curricula screen once that is fixed.
+
+For a learner or teacher account, the message names the sync to run; see
+[Saved, but the learning server did not answer](/admin-guide/when-something-is-refused#saved-but-the-learning-server-did-not-answer).
+When no learner server is set up, nothing is sent and you see no warning.
+
+If a **Sync Students** or **Sync Teachers** button is refused, the refusal says
+which sync to run; see
+[When a sync is refused](/admin-guide/when-something-is-refused#syncing).
+
 ## Sync Content
 
-Publishing pushes by itself. **Sync Content** is the manual push, for when an
-automatic one has failed.
+Publishing pushes by itself, and so does saving a school, a class or the
+quiz-pass switch (see [What is sent by itself](#what-is-sent-by-itself)).
+**Sync Content** is the manual push, for when an automatic one has failed.
+
+**When to run it.**
+
+- When a **Saved, but** warning or a refused sync tells you to, as above.
+- After a publish whose push failed (the message says so).
+- When learners are missing a curriculum you know is published.
+
+You do **not** need it before you add or move a learner into a new school or
+class, or before you add a teacher: the admin sends the school and class itself
+when it finds them missing.
 
 It is a button at the top of the Curriculum list. You see it if your account is
 an **Admin** or an **Organisation Admin**, or a platform account that has chosen
@@ -217,6 +280,11 @@ teachers only, and only the school you chose.
   then reads *Deleted. The teacher can no longer sign in.*), you do not need to
   run it.
 
+You do not need Sync Content first. If the learner server does not have the
+school, Sync Teachers sends it and tries once more. If that does not work, you
+see a refusal that names what to do; see
+[When something is refused](/admin-guide/when-something-is-refused#syncing).
+
 If the school has no teachers you get **There are no teachers to sync.** If the
 learner server cannot be reached you get **The service is temporarily unavailable.
 Try again in a few minutes.** with a reference code; nothing is lost, so try again
@@ -235,12 +303,11 @@ later. See [When something is refused](/admin-guide/when-something-is-refused#sy
 Two cautions:
 
 - **Accounts are separate from content.** Publishing sends curricula, not
-  people. A new learner cannot sign in until you have also run
+  people. A learner added from a sheet cannot sign in until you have run
   [Sync Students](/admin-guide/learners-and-teachers#sync-students), and a teacher
   login made from a sheet cannot sign in until you have run
-  [Sync Teachers](#sync-teachers). A learner added with the form is sent at once,
-  but their school and class must already be on the learner server, so run Sync
-  Content first.
+  [Sync Teachers](#sync-teachers). A learner or teacher added with the form is
+  sent when you save, so you do not run either.
 - **Media files are not part of the snapshot.** A publish records which media a
   lesson uses, but a file replaced in storage under the same name reaches
   learners without a publish. See

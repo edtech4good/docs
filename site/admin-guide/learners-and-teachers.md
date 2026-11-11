@@ -14,6 +14,10 @@ on 8 Nov 2026. The **Add one teacher** and **Manage** sections were checked agai
 on 9 Nov 2026. The **Move**, **Remove** and **Delete** sections were checked against
 [`edtech-lms-ui` b7e40de](https://github.com/edtech4good/edtech-lms-ui/commit/b7e40de) and
 [`edtech-lms-api` 19784dc](https://github.com/edtech4good/edtech-lms-api/commit/19784dc)
+on 11 Nov 2026. The **Grade** field, the published-only curriculum lists and the advice on
+when to run a sync were checked against
+[`edtech-lms-ui` ca8d377](https://github.com/edtech4good/edtech-lms-ui/commit/ca8d377) and
+[`edtech-lms-api` 7737d6b](https://github.com/edtech4good/edtech-lms-api/commit/7737d6b)
 on 11 Nov 2026.*
 
 You can add **one learner or one teacher at a time** with a form, or add **many
@@ -42,7 +46,10 @@ Once an account exists, each row on the Learners and Teachers lists has a
 You need:
 
 - the **school** the people belong to, already created under
-  **People › Schools**, and attached to at least one curriculum;
+  **People › Schools**, and attached to at least one curriculum. A learner can
+  only be put in a **published** curriculum (see
+  [Publish and sync](/admin-guide/publish-and-sync)), and the curriculum needs at
+  least one **grade**;
 - for learners, a **class** under **People › Classes** (a class is required for
   every learner row that is not a teacher);
 - an account that is allowed to upload or add: Organisation Admin, Admin or Super
@@ -96,9 +103,31 @@ A star in the form marks a required field.
 - **Class** (required). Choose a school first; the list then shows that school's
   classes. If it has none you see *This school has no classes yet. Add one on the
   Schools screen.*
-- **Curriculum** (required). Choose one or more; the list shows the curricula
-  that school is attached to. If it has none you see *This school has no
-  curricula yet.* Changing the school clears the class and the curriculum.
+- **Curriculum** (required). Choose one or more; the list shows the **published**
+  curricula that school is attached to. A curriculum that was never published, or
+  was retired, is not offered. If the school has none you see *This school has no
+  curricula yet.* Changing the school clears the class and the curriculum. The
+  **first** curriculum you choose decides the grade (below). If a curriculum
+  cannot be used you see, under the field, *Publish [Curriculum] first, or choose
+  another curriculum.*
+- **Grade** (required). The grade the learner is in, one of the grades of the
+  first curriculum you chose. What you see depends on that curriculum:
+  - **One grade.** There is nothing to choose. The form shows it as text, for
+    example *Grade: Grade 3 (In [Curriculum])*, and saves that grade.
+  - **Several grades.** A **Grade** list appears with *Choose a grade* in it and
+    the line *In [Curriculum]* under it. If you save without choosing one you see
+    *Choose a grade for this student.* If the server refuses the one you chose you
+    see *Choose a grade of this curriculum.*
+  - **No grade.** Under **Curriculum** you see *This curriculum has no grade yet,
+    so a learner can't be put in it.* and the form will not save. Choose another
+    curriculum.
+  - **The grades cannot be read.** You see *This curriculum's grades couldn't be
+    loaded.* with a **Try again** link, and the form will not save. If you choose
+    **Add learner** while they are still loading you see *Wait for the curriculum's
+    grades to load.*
+
+  If you change the first curriculum, the grades are read again and a grade that
+  does not belong to the new curriculum is cleared.
 
 **About the learner**
 
@@ -134,9 +163,11 @@ learner's name, shown here as [Name]:
   learner is saved in the admin, but the learning server did not answer. Run
   [Sync Students](#sync-students) for the school.
 - *[Name] can't sign in yet. Saved, but the learning server doesn't have this
-  class or curriculum yet. Run Sync Content, then Sync Students for this
-  school.* The learner is saved, but the learning server refused the learner
-  because it does not have the learner's class or curriculum yet. Run
+  school, class or curriculum yet. Run Sync Content, then Sync Students for this
+  school.* The learner is saved, but the learning server still refused the
+  learner because it does not have the learner's school, class or curriculum. The
+  admin has already tried once to send the missing school and class; if you
+  see this, run
   [Sync Content](/admin-guide/publish-and-sync#sync-content) first, then Sync
   Students.
 - *[Name] can sign in once the learning server next syncs.* The learner is saved
@@ -148,12 +179,12 @@ learner's name, shown here as [Name]:
 A learner added with this form is recorded as **online**. See the note about `type` under
 [The learner sheet](#the-learner-sheet).
 
-::: tip Run Sync Content first
-The learner's school and class must already be on the learning server, or it
-refuses the learner and nothing is saved there. The curriculum is not required
-on the learning server. If you have just created the school or the class, run
-[Sync Content](/admin-guide/publish-and-sync#sync-content) first, and only then
-add the learner.
+::: tip You do not need to run Sync Content first
+A school or class you have just created is sent to the learning server when you
+save it. If the learning server still lacks the school or class when you add the
+learner, the admin sends them and tries the learner once more. Run
+[Sync Content](/admin-guide/publish-and-sync#sync-content) only when a message
+tells you to. See [What is sent by itself](/admin-guide/publish-and-sync#what-is-sent-by-itself).
 :::
 
 Give the username and password to the learner in person or on a printed card, as
@@ -175,9 +206,16 @@ Use the sheet to add many learners at once. For one learner, use
    ![The Upload Users dialog with School, Curriculum and Class chosen and an Upload button.](/admin-guide/upload-dialog.png)
 
 5. Choose the **School**, then the **Curriculum** (or curricula: you can pick
-   more than one), then the **Class**. The curriculum list shows the curricula
-   that school is attached to.
-6. Choose **Upload**, and pick your CSV file.
+   more than one). The curriculum list shows the curricula that school is
+   attached to.
+6. Look at the **Grade** under the curriculum. It is a grade of the first
+   curriculum you chose, and it works as in [Add one learner](#the-fields): with
+   one grade it is shown as text, with several you choose, and with none you see
+   *This curriculum has no grade yet, so a learner can't be put in it.* One grade
+   applies to every row of the file. If the grade is missing or still loading,
+   nothing is sent: the dialog shows the message and an error notice repeats it.
+   Then choose the **Class**.
+7. Choose **Upload**, and pick your CSV file.
 
 If everything is accepted you see **Users uploaded successfully** and the
 learners appear in the list. If anything is wrong the whole file is refused and
@@ -259,8 +297,14 @@ A few things about these rules:
 - **The sheet lists every problem it finds**, all in one message, so fix them
   all before you upload again. Examples of the exact wording are on
   [When something is refused](/admin-guide/when-something-is-refused).
-- **The upload dialog's school, curriculum and class apply to every row.**
-  To put learners in different classes, upload one file per class.
+- **The upload dialog's school, curriculum, class and grade apply to every row.**
+  To put learners in different classes or grades, upload one file per class and
+  grade.
+- **Every curriculum you choose must be published.** If one was never published, or was
+  retired, the whole file is refused with *Publish [Curriculum] first, or choose
+  another curriculum.* A file wrong on both rules (an unpublished curriculum and a
+  missing grade) is refused with both sentences in one message, because an upload
+  highlights no fields.
 - **About `type`.** The sheet insists on `offline` or `online`, but a learner
   added through **Upload Users** is recorded as `offline` whichever you write,
   and a row marked `is_teacher_acc` `1` is recorded as `online`. A learner
@@ -417,9 +461,15 @@ Things to know:
 - **A platform account should choose your organisation first** with the
   switcher, so that the Schools list shows only your schools.
 - **It is per school.** Sync each school you added learners to.
-- **Sync again after every change.** Uploading more learners, or editing
-  existing ones, changes the admin only. The learner server keeps the old copy
-  until the next Sync Students.
+- **Sync again after every upload.** Uploading more learners, or editing
+  existing ones with **Upload Edited Students**, changes the admin only. The
+  learner server keeps the old copy until the next Sync Students. Learners you add
+  or change one at a time with the forms are sent when you save, so they do not
+  need it.
+- **You do not need Sync Content first.** If the learner server does not have the
+  school or one of its classes, Sync Students sends them and tries once more. If
+  that does not work you see a refusal that says what to do; see
+  [When something is refused](/admin-guide/when-something-is-refused#syncing).
 - **If the school has no learners yet,** you get **There are no students to
   sync.**
 - **If the learner server cannot be reached,** you get **The service is
@@ -471,10 +521,18 @@ learner's menu. The username and the school are shown but cannot be changed here
    again.*) and a **Close** button.
 2. Change what you need. The fields are **First name** (required), **Last name**,
    **Gender** (required, **Female** or **Male**), **Date of birth**, **Class**
-   (required, from the school's classes) and **Curriculum** (required, one or
-   more of the school's curricula). Each has the rule and message it has in the
-   [Add one learner](#the-fields) form. Leaving the curriculum empty gives
-   *Choose at least one curriculum.*
+   (required, from the school's classes), **Curriculum** (required, one or
+   more of the school's curricula) and **Grade** (required). Each has the rule
+   and message it has in the [Add one learner](#the-fields) form. Leaving the
+   curriculum empty gives *Choose at least one curriculum.* The **Curriculum**
+   list offers published curricula only; a curriculum the learner already has
+   stays chosen and saves even if it has been retired since, and is marked
+   *(retired)*, *(not published)* or *(no longer available)*. The **Grade** is
+   one of the grades of the learner's current main curriculum while it is
+   still chosen, otherwise of the first
+   curriculum now chosen. The learner's own grade is already chosen when it is one of them. A learner with no grade yet
+   must be given one before you can save, unless the curriculum has only one
+   grade, which is filled in for you.
 3. Choose **Save**. The button reads **Saving…**.
 
 If the learner's class or a curriculum has been deleted since, the form shows
@@ -605,14 +663,19 @@ reads *There is no other school to move to.*
 3. Choose the **Class** (required). It stays empty and greyed out until you choose
    a school, and it is emptied again if you change the school. It lists the new
    school's classes.
-4. Choose the **Curricula** (required, one or more). It lists the curricula the new
-   school has. The learner's current curricula that the new school also has are
-   already chosen; add or remove as needed.
-5. Choose **Move**. The button reads **Moving…** while it works. **Cancel**, **Close**,
+4. Choose the **Curricula** (required, one or more). It lists the published
+   curricula the new school has. The learner's current curricula that the new
+   school also has are already chosen, and one that has been retired since stays
+   chosen, marked *(retired)*; add or remove as needed.
+5. Choose the **Grade** (required), a grade of the learner's current main curriculum while it is still chosen,
+   otherwise of the first curriculum now chosen. It works as in
+   [Add one learner](#the-fields). The learner's own grade is already chosen when
+   it is one of the options.
+6. Choose **Move**. The button reads **Moving…** while it works. **Cancel**, **Close**,
    Escape or a click outside closes the form and changes nothing.
 
-Under a field you may see *Choose a school.*, *Choose a class.* or *Choose at least
-one curriculum.* If the school's classes or curricula cannot be read you see *This
+Under a field you may see *Choose a school.*, *Choose a class.*, *Choose at least
+one curriculum.* or *Choose a grade for this student.* If the school's classes or curricula cannot be read you see *This
 school's classes or curricula couldn't be loaded.* with a **Try again** link, and
 if the schools cannot be read, *The schools couldn't be loaded.* with a **Try
 again** link. If the form cannot read the learner you see *The learner's details
@@ -638,11 +701,11 @@ and a message says how it went:
 - **Moved**: *Moved, but the learning server did not answer. Run Sync Students for
   [School] on the Schools screen.* The move is saved in the admin and is not lost.
   This message stays on screen until you close it. Run **Sync Students** for the
-  new school. If the new school, or its class, was added since the last **Sync
-  Content**, run **Sync Content** first and then **Sync Students** for the new
-  school; otherwise Sync Students may fail with *Something went wrong on our side.*
-- **Moved**: *Moved, but the learning server doesn't have this class or curriculum
-  yet. Run Sync Content, then Sync Students for [School].* Run them in that order.
+  new school. If the school and its class were new, the admin has already tried
+  to send them; Sync Students tries once more too.
+- **Moved**: *Moved, but the learning server doesn't have this school, class or
+  curriculum yet. Run Sync Content, then Sync Students for [School].* Run them in
+  that order.
 - **Moved**: *Moved to [School]. No learner server is set up here, so nothing was
   pushed.* You see this only when no learning server is connected to the admin.
 
@@ -712,13 +775,24 @@ them as a sheet, change it, and **upload** it back.
    **Edited Students uploaded successfully**, and the page reloads.
 
 The edit sheet has the same columns as the upload sheet plus `studentid`,
-`schooluserid`, `schoolname`, `curriculums`, `standard` and `isactive`. `isactive`
+`schooluserid`, `schoolname`, `curriculums`, `standard`, `grade` and `isactive`. `isactive`
 is `1` for an active learner and `0` for one who is not. Two rules differ from
 a new upload:
 
 - `schooluserpasswordhash` can be **left blank**, which keeps the learner's
   password as it is. If you type one, it must be 6 to 16 letters and digits,
   and it replaces the old one.
+- `grade` is the **name** of a grade of the learner's first curriculum. The
+  downloaded sheet fills it in, so it uploads unchanged. If you leave it blank, the
+  learner keeps their grade while it still fits, or gets the curriculum's only
+  grade. A name that fits no grade of that curriculum, or a blank for a learner
+  whose curriculum has several grades and who has none yet, refuses the whole file
+  with *Choose a grade of this curriculum.* or *Choose a grade for this student.*
+  A curriculum with no grade gives *This curriculum has no grade yet, so a learner
+  can't be put in it.* A row that adds a curriculum which is not published is
+  refused with *Publish [Curriculum] first, or choose another curriculum.*; a
+  curriculum the learner already has is not checked. A row wrong on both rules
+  gets both sentences.
 - `dateofjoin` is still required on every row. A row where it is blank, which
   can happen for a teacher account, is refused. Leave such rows out of the file.
 

@@ -11,9 +11,14 @@ description: The messages admin staff meet when an upload, sign-in, publish or s
 on 9 Nov 2026. The **Delete**, **Remove** and **Move** messages were checked against
 [`edtech-lms-ui` b7e40de](https://github.com/edtech4good/edtech-lms-ui/commit/b7e40de) and
 [`edtech-lms-api` 19784dc](https://github.com/edtech4good/edtech-lms-api/commit/19784dc)
+on 11 Nov 2026. The sync refusals, the school-name and school-move refusals, the
+publish and grade refusals and the **Saved, but** warnings for schools and classes
+were checked against
+[`edtech-lms-ui` ca8d377](https://github.com/edtech4good/edtech-lms-ui/commit/ca8d377) and
+[`edtech-lms-api` 7737d6b](https://github.com/edtech4good/edtech-lms-api/commit/7737d6b)
 on 11 Nov 2026.*
 
-Most refusals appear as a red **Error** notice in the top right corner of the
+Most refusals appear as a red **Error** notice in the bottom left corner of the
 page. This page lists the ones you are most likely to meet, quoted as they
 appear, with what causes each and what to do. Text in quotation marks is the
 screen's own wording, including its odd spacing and punctuation.
@@ -137,7 +142,8 @@ chosen an organisation.
 
 These notices come after **Add learner**, **+ Add teacher**, **Edit details**,
 **Move to another school**, **Reset password**, **Disable**, **Enable** and
-**Delete** on a teacher. In every case **the change is saved
+**Delete** on a teacher, and after saving a school, a class or the quiz-pass
+switch. In every case **the change is saved
 in the admin and is not lost**. What failed is the copy to the learner server, so
 until you run the sync the notice names, that server still has the old state. The
 person may still be able to sign in with the old password, or after a disable.
@@ -148,9 +154,18 @@ person may still be able to sign in with the old password, or after a disable.
 - `[Name] can't sign in yet: the learning server did not answer. Run Sync Teachers for this school on the Schools screen.` (a teacher added with the form)
   - **Cause:** The teacher is saved, but the learner server did not answer.
   - **What to do:** Run **Sync Teachers** for the school. See [Sync Teachers](/admin-guide/publish-and-sync#sync-teachers).
-- `Saved, but the learning server doesn't have this class or curriculum yet. Run Sync Content, then Sync Students for this school.` (after **Add learner** it follows *[Name] can't sign in yet.* on the same line)
-  - **Cause:** The learner is saved, but the learner server does not yet have the learner's class or curriculum, so it refused the learner. Any change that sends a learner to the learner server can show it: **Add learner**, **Edit details**, **Disable** or **Enable**, and **Reset password**.
+- `Saved, but the learning server doesn't have this school, class or curriculum yet. Run Sync Content, then Sync Students for this school.` (after **Add learner** it follows *[Name] can't sign in yet.* on the same line)
+  - **Cause:** The learner is saved, but the learner server still does not have the learner's school, class or curriculum, so it refused the learner. Before showing this, the admin has already sent the school and its classes and tried once more. Any change that sends a learner to the learner server can show it: **Add learner**, **Edit details**, **Disable** or **Enable**, and **Reset password**.
   - **What to do:** Run **Sync Content**, then **Sync Students** for the school, in that order.
+- `Saved, but the learning server doesn't have this school yet. Run Sync Content, then Sync Teachers for this school.` (a teacher added, disabled, enabled or given a new password)
+  - **Cause:** The teacher is saved, but the learner server still does not have the school, even after the admin tried once to send it.
+  - **What to do:** Run **Sync Content**, then **Sync Teachers** for the school, in that order.
+- `Saved, but the learning server did not answer. Run Sync Content on the Curricula screen to send it again.` (a **Saved** warning, after you create, edit or delete a school or a class, or save the quiz-pass switch; it stays on screen until you close it, and closes if you move to another page)
+  - **Cause:** The school, class or setting is saved in the admin. The learner server did not answer, so it does not have the change yet.
+  - **What to do:** Open the **Curricula** screen and run **Sync Content**. The warning does not undo the save.
+- `Saved, but the learning server did not accept it: [reason] Run Sync Content on the Curricula screen once that is fixed.` (the same warning, when the learner server answered and refused)
+  - **Cause:** The learner server refused the change and gave a reason, which the message repeats.
+  - **What to do:** Fix what the reason names, then run **Sync Content**. If the reason is not something you can fix, send the wording to whoever runs your deployment.
 - `The details were saved, but the learning server did not answer. Run Sync Students for this school on the Schools screen.` (**Saved**, after Edit details)
   - **Cause:** The edit is in the admin; the learner server has the old details.
   - **What to do:** Run **Sync Students** for the school.
@@ -166,13 +181,16 @@ person may still be able to sign in with the old password, or after a disable.
   - **Cause and what to do:** The same, with **Sync Teachers**.
 - `Moved, but the learning server did not answer. Run Sync Students for [School] on the Schools screen.` (**Moved**, after Move to another school; it stays on screen until you close it)
   - **Cause:** The move is saved in the admin; the learner server still has the learner in the old school.
-  - **What to do:** Run **Sync Students** for the new school. If the new school or its class was added since the last **Sync Content**, run **Sync Content** first, then **Sync Students** for the new school.
-- `Moved, but the learning server doesn't have this class or curriculum yet. Run Sync Content, then Sync Students for [School].` (**Moved**)
-  - **Cause:** The move is saved, but the learner server does not yet have the new class or one of the curricula, so it refused the learner.
+  - **What to do:** Run **Sync Students** for the new school.
+- `Moved, but the learning server doesn't have this school, class or curriculum yet. Run Sync Content, then Sync Students for [School].` (**Moved**)
+  - **Cause:** The move is saved, but the learner server still does not have the new school, the class or one of the curricula, so it refused the learner.
   - **What to do:** Run **Sync Content**, then **Sync Students** for the new school, in that order.
 - `Deleted, but the learning server did not answer. Run Sync Teachers for this school on the Schools screen.` (**Deleted**, after Delete on a teacher; it stays on screen until you close it)
   - **Cause:** The teacher is deleted in the admin; the learner server was not told, so the teacher may still sign in.
   - **What to do:** Run **Sync Teachers** for the school.
+- `Deleted, but the learning server doesn't have this school yet, so the teacher can still sign in there. Run Sync Content, then Sync Teachers for this school.` (**Deleted**, after Delete on a teacher)
+  - **Cause:** As above, and the learner server also lacks the school.
+  - **What to do:** Run **Sync Content**, then **Sync Teachers** for the school, in that order.
 - `Moved to [School]. No learner server is set up here, so nothing was pushed.` and `Deleted. No learner server is set up here, so nothing was pushed.`
   - **Cause:** No learner server is connected to this admin, so nothing was sent.
   - **What to do:** Nothing.
@@ -225,6 +243,8 @@ person may still be able to sign in with the old password, or after a disable.
 - `Choose at least one curriculum.` and `Choose curricula that exist.`
   - **Cause:** No curriculum is chosen, or one of them no longer exists in this organisation.
   - **What to do:** Choose one or more from the list.
+- `Publish [Curriculum] first, or choose another curriculum.`, `Choose a grade for this student.`, `Choose a grade of this curriculum.` and `This curriculum has no grade yet, so a learner can't be put in it.`
+  - **Cause and what to do:** See [Curriculum and grade refusals](#curriculum-and-grade-refusals).
 - `This learner has more than one record, so it can't be moved here. Contact support.`
   - **Cause:** This login has more than one learner record, and a move would leave the records in different schools.
   - **What to do:** Do not retry. Send the learner's username to whoever runs your deployment.
@@ -242,6 +262,46 @@ person may still be able to sign in with the old password, or after a disable.
   - **What to do:** See [Choosing an organisation](#choosing-an-organisation-platform-accounts).
 
 A move that is saved but not copied to the learner server is not a refusal; see the **Moved, but** messages in [Saved, but the learning server did not answer](#saved-but-the-learning-server-did-not-answer).
+
+## Curriculum and grade refusals
+
+These come from **Add learner**, **Edit details**, **Move to another school**, the **Upload Users** dialog and **Upload Edited Students**. In a form, the message appears under the field it belongs to. When a form has two things wrong at once, each message appears under its own field. An upload highlights nothing, so it refuses the whole file with every sentence in one message.
+
+- `Publish [Curriculum] first, or choose another curriculum.`
+  - **Cause:** The curriculum was never published, or was retired, and learners can only be put in a published one. On Edit details, Move and Upload Edited Students only a curriculum you are **adding** is checked; one the learner already has is kept.
+  - **What to do:** [Publish the curriculum](/admin-guide/publish-and-sync#publish-a-curriculum), or choose another one.
+- `Choose a grade for this student.`
+  - **Cause:** The learner's first curriculum has several grades and none is chosen (or, in an edit sheet, the `grade` cell is blank for a learner who has no grade yet).
+  - **What to do:** Choose a grade. See [Add one learner](/admin-guide/learners-and-teachers#the-fields).
+- `Choose a grade of this curriculum.`
+  - **Cause:** The grade chosen, or the grade name in an edit sheet, does not belong to the learner's first curriculum, or was deleted.
+  - **What to do:** Choose one from the list, or correct the name in the sheet.
+- `This curriculum has no grade yet, so a learner can't be put in it.`
+  - **Cause:** The first curriculum has no grade.
+  - **What to do:** Choose another curriculum. The form will not save until you do.
+- `This curriculum's grades couldn't be loaded.` and `Wait for the curriculum's grades to load.`
+  - **Cause:** The form could not read the curriculum's grades, or you pressed the save button before they had loaded.
+  - **What to do:** Choose **Try again**, or wait a moment.
+- Both sentences together, for example `Publish [Curriculum] first, or choose another curriculum. Choose a grade for this student.` (**Upload Users** or **Upload Edited Students**)
+  - **Cause:** The file is wrong on both rules. Nothing is added.
+  - **What to do:** Fix both, then upload again.
+- `Choose curricula that exist.`
+  - **Cause:** **Upload Users**: no curriculum is chosen in the dialog, or one of them no longer exists.
+  - **What to do:** Choose a curriculum in the dialog.
+
+## Schools
+
+These come from the school forms (**People › Schools**, **Create** or **Edit**).
+
+- `That school already exists.` (under **School Name**)
+  - **Cause:** Another school already has this name. School names are unique across the whole platform, not only in your organisation.
+  - **What to do:** Choose another name.
+- `A school with this name existed before. Choose another name.` (under **School Name**)
+  - **Cause:** A school with this name was deleted once. A deleted school's name cannot be used again.
+  - **What to do:** Choose another name.
+- `A school can't be moved to another organisation yet. Create the school in the other organisation instead.`
+  - **Cause:** A school's organisation cannot be changed while a learner server is set up. The school forms do not offer an organisation, so you meet this only if a school is saved with a different one.
+  - **What to do:** Create the school again in the other organisation.
 
 ## Add, edit, reset and disable forms
 
@@ -277,9 +337,18 @@ Most field messages appear under the field they belong to. The others appear at 
 - `There are no students to sync.`
   - **Cause:** **Sync Students** on a school with no learners.
   - **What to do:** Upload learners first.
+- `The learning server doesn't have this school or one of its classes yet. Run Sync Content, then Sync Students.` (an **Error** notice after **Sync Students**; for **Sync Teachers** it ends `...then Sync Teachers.`; it stays until you close it, and when it names Sync Content it has a **Go to Sync Content** link)
+  - **Cause:** The learner server does not have the school or one of its classes. The sync has already tried once to send them and tried again.
+  - **What to do:** Run **Sync Content** (the link opens the Curriculum list), then run the sync again.
+- `A curriculum these learners use isn't on the learning server. Publish it, then Sync Students.`
+  - **Cause:** Some of the school's learners are in a curriculum the learner server does not have, because it was never published or was retired.
+  - **What to do:** [Publish](/admin-guide/publish-and-sync#publish-a-curriculum) the curriculum, then run **Sync Students** again.
+- `The sync was refused.` (an **Error** notice after **Sync Students** or **Sync Teachers**)
+  - **Cause:** The sync was refused and no reason came with it.
+  - **What to do:** Run the sync again. If it repeats, send the wording to whoever runs your deployment.
 - `Something went wrong on our side.` (after **Sync Students** for a school)
-  - **Cause:** This is the general message for a fault on the server side. One common cause: the school, or one of its classes, was added after the last **Sync Content**, so the learner server does not have it yet. This often follows a move to a new school.
-  - **What to do:** Run **Sync Content** first, then **Sync Students** for the school. If it repeats, give the reference code, if one is shown, to whoever runs the deployment.
+  - **Cause:** This is the general message for a fault on the server side. The refusals above have their own messages, so this one means something else.
+  - **What to do:** Try again. If it repeats, give the reference code, if one is shown, to whoever runs the deployment.
 - `There are no teachers to sync.`
   - **Cause:** **Sync Teachers** on a school with no teacher logins.
   - **What to do:** Add or upload teachers first.
