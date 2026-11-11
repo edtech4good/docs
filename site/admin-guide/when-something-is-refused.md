@@ -278,8 +278,8 @@ Most field messages appear under the field they belong to. The others appear at 
   - **Cause:** **Sync Students** on a school with no learners.
   - **What to do:** Upload learners first.
 - `Something went wrong on our side.` (after **Sync Students** for a school)
-  - **Cause:** The school, or one of its classes, was added after the last **Sync Content**, so the learner server does not have it yet. This often follows a move to a new school.
-  - **What to do:** Run **Sync Content** first, then **Sync Students** for the school.
+  - **Cause:** This is the general message for a fault on the server side. One common cause: the school, or one of its classes, was added after the last **Sync Content**, so the learner server does not have it yet. This often follows a move to a new school.
+  - **What to do:** Run **Sync Content** first, then **Sync Students** for the school. If it repeats, give the reference code, if one is shown, to whoever runs the deployment.
 - `There are no teachers to sync.`
   - **Cause:** **Sync Teachers** on a school with no teacher logins.
   - **What to do:** Add or upload teachers first.
