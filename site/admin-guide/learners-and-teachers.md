@@ -528,8 +528,8 @@ learner's menu. The username and the school are shown but cannot be changed here
    list offers published curricula only; a curriculum the learner already has
    stays chosen and saves even if it has been retired since, and is marked
    *(retired)*, *(not published)* or *(no longer available)*. The **Grade** is
-   one of the grades of the learner's current main curriculum (the first one
-   in the learner's list) while it is still chosen, otherwise of the first
+   one of the grades of the learner's current main curriculum while it is
+   still chosen, otherwise of the first
    curriculum now chosen. The learner's own grade is already chosen when it is one of them. A learner with no grade yet
    must be given one before you can save, unless the curriculum has only one
    grade, which is filled in for you.
