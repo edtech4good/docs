@@ -8,7 +8,10 @@ description: How to publish, re-publish and retire a curriculum, read the change
 *Written for the admin as of [`edtech-lms-ui` d0ba85c](https://github.com/edtech4good/edtech-lms-ui/commit/d0ba85c) and the central server as of [`edtech-lms-api` 9654979](https://github.com/edtech4good/edtech-lms-api/commit/9654979), checked on 31 Oct 2026. The **Sync Teachers** section was checked against
 [`edtech-lms-ui` 0b4bf9e](https://github.com/edtech4good/edtech-lms-ui/commit/0b4bf9e) and
 [`edtech-lms-api` 33c357a](https://github.com/edtech4good/edtech-lms-api/commit/33c357a)
-on 9 Nov 2026.*
+on 9 Nov 2026. The advice on **Delete** was checked against
+[`edtech-lms-ui` b7e40de](https://github.com/edtech4good/edtech-lms-ui/commit/b7e40de) and
+[`edtech-lms-api` 19784dc](https://github.com/edtech4good/edtech-lms-api/commit/19784dc)
+on 11 Nov 2026.*
 
 Editing a curriculum does not change what learners see. **Publishing** does.
 This page covers the whole job: publishing, reading the change summary,
@@ -207,13 +210,12 @@ teachers only, and only the school you chose.
   and the teacher cannot sign in on the learner server, until you run Sync
   Teachers for that school.
 - When a message tells you to. After **+ Add teacher**, **Reset password**,
-  **Disable** or **Enable** on a teacher, the admin says whether the learner server
-  got the change. If it says the learning server did not answer, it also says
-  *Run Sync Teachers for this school on the Schools screen.* When the change did
-  reach the learner server, you do not need to run it.
-- After **Delete** on a teacher. Deleting a teacher is not sent to the learner
-  server at once, so run Sync Teachers for that school, or the teacher can still
-  sign in to the app until you do.
+  **Disable**, **Enable** or **Delete** on a teacher, the admin says whether the
+  learner server got the change. If it says the learning server did not answer, it
+  also says to run Sync Teachers, for example *Run Sync Teachers for this school on
+  the Schools screen.* When the change did reach the learner server (a **Delete**
+  then reads *Deleted. The teacher can no longer sign in.*), you do not need to
+  run it.
 
 If the school has no teachers you get **There are no teachers to sync.** If the
 learner server cannot be reached you get **The service is temporarily unavailable.

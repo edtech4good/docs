@@ -1,6 +1,6 @@
 ---
 title: Add learners and teachers
-description: How to add one learner or one teacher at a time, or many from a spreadsheet, every column of the learner sheet, the rules that refuse a row, the Sync Students and Sync Teachers steps, and the Manage menu to edit, reset, disable or delete an account.
+description: How to add one learner or one teacher at a time, or many from a spreadsheet, every column of the learner sheet, the rules that refuse a row, the Sync Students and Sync Teachers steps, and the Manage menu to edit, move, reset, disable, remove or delete an account.
 ---
 
 # Add learners and teachers
@@ -11,7 +11,10 @@ description: How to add one learner or one teacher at a time, or many from a spr
 on 8 Nov 2026. The **Add one teacher** and **Manage** sections were checked against
 [`edtech-lms-ui` 0b4bf9e](https://github.com/edtech4good/edtech-lms-ui/commit/0b4bf9e) and
 [`edtech-lms-api` 33c357a](https://github.com/edtech4good/edtech-lms-api/commit/33c357a)
-on 9 Nov 2026.*
+on 9 Nov 2026. The **Move**, **Remove** and **Delete** sections were checked against
+[`edtech-lms-ui` b7e40de](https://github.com/edtech4good/edtech-lms-ui/commit/b7e40de) and
+[`edtech-lms-api` 19784dc](https://github.com/edtech4good/edtech-lms-api/commit/19784dc)
+on 11 Nov 2026.*
 
 You can add **one learner or one teacher at a time** with a form, or add **many
 people at once** by uploading a **CSV file**, one row per person. A CSV is a
@@ -75,7 +78,8 @@ A star in the form marks a required field.
   allowed you see *Use 2 to 16 English letters or numbers.* A username counts as
   taken **whatever its capital letters**: if `Sokha2` exists, `sokha2` is taken.
   As with the sheet, a username that any organisation has used cannot be used
-  again.
+  again, unless the learner was taken away with
+  [Remove](#remove-learners-who-have-never-signed-in).
 - **Password** (required). 8 to 32 characters with at least one letter and one
   number, and no spaces. If it is wrong you see *Use 8 to 32 characters with at
   least one letter and one number, and no spaces.* Two buttons sit beside the
@@ -245,7 +249,9 @@ A few things about these rules:
 
 - **Usernames are shared across the whole system.** A username that any
   organisation has ever used cannot be used again, even if that account was
-  later deleted. A short code for your school at the front (`pp3anna`) avoids
+  later deleted. The one exception is a learner taken away with
+  [Remove](#remove-learners-who-have-never-signed-in), whose username is free
+  again. A short code for your school at the front (`pp3anna`) avoids
   clashes.
 - **The refusal message names the column and the row.** `"[0].schoolusername"`
   means the first data row's `schoolusername`. Row numbers start at `0`, so
@@ -439,18 +445,17 @@ none is allowed there is no **Manage** button. An account that is disabled shows
 
 | List | Menu items |
 |---|---|
-| **Learners** | **Edit details**, **Reset password**, **Disable** (or **Enable**) |
+| **Learners** | **Edit details**, **Move to another school**, **Reset password**, **Disable** (or **Enable**), and, for a learner who has never signed in, a divider and **Remove** |
 | **Teachers** | **Reset password**, **Disable** (or **Enable**), then a divider and **Delete** |
 
 **Edit details** and **Reset password** open a form at the right of the page.
-**Disable**, **Enable** and **Delete** ask first.
+**Move to another school** opens a form too. **Disable**, **Enable**, **Remove** and **Delete** ask first.
 
 Most of these changes are sent to the learner server as soon as you save. The
 message after saving says how that went. When it says the learning server did not
 answer, the change is saved in the admin and is not lost: run the sync it names
-for the school. One change is not sent: **Delete** on a teacher. After deleting a
-teacher, run **Sync Teachers** for the school, or they can still sign in to the
-app until you do. The messages are listed on
+for the school. **Remove** on a learner is different: it is refused unless the learning server confirms, so a removal is
+never half done on one side. The messages are listed on
 [When something is refused](/admin-guide/when-something-is-refused#saved-but-the-learning-server-did-not-answer).
 
 ### Edit details (learners)
@@ -578,15 +583,114 @@ username:
 - **Saved**: *[Username] is disabled. The learning server gets the change at its
   next sync.* You see this only when no learning server is connected to the admin.
 
+### Move to another school (learners)
+
+**Move to another school** puts one learner in another school of the same
+organisation, with a class and curricula of that school. It is the second item in a
+learner's menu, after **Edit details**, and you see it if you may edit learners.
+A learner can be moved only to a school of its own organisation; a school of
+another organisation is never offered.
+
+If there is no other school to move to, the item is greyed out and its tooltip
+reads *There is no other school to move to.*
+
+1. Choose **Manage** on the learner's row, then **Move to another school**. A form
+   opens at the right of the page, titled **Move [Username]**. Under the title it
+   says *Past results move with the learner.* A placeholder shows while the form
+   loads.
+2. Choose the **School** (required). It lists the organisation's other schools, not
+   the one the learner is in.
+3. Choose the **Class** (required). It stays empty and greyed out until you choose
+   a school, and it is emptied again if you change the school. It lists the new
+   school's classes.
+4. Choose the **Curricula** (required, one or more). It lists the curricula the new
+   school has. The learner's current curricula that the new school also has are
+   already chosen; add or remove as needed.
+5. Choose **Move**. The button reads **Moving…** while it works. **Cancel**, **Close**,
+   Escape or a click outside closes the form and changes nothing.
+
+Under a field you may see *Choose a school.*, *Choose a class.* or *Choose at least
+one curriculum.* If the school's classes or curricula cannot be read you see *This
+school's classes or curricula couldn't be loaded.* with a **Try again** link, and
+if the schools cannot be read, *The schools couldn't be loaded.* with a **Try
+again** link. If the form cannot read the learner you see *The learner's details
+couldn't be loaded.* (or *That learner no longer exists. Close this and try
+again.*) and a **Close** button. The refusals that can come back after you choose
+**Move** are listed on
+[When something is refused](/admin-guide/when-something-is-refused#move-to-another-school).
+
+**What changes.** The learner's school, class and curricula change. Nothing else
+does: the name, username, password, and whether the account is disabled stay as
+they were, and a disabled learner can be moved and stays disabled. **Past results
+move with the learner.** They are not kept with the old school, and the school a
+result was earned in is not recorded.
+
+**What the learner sees.** When the learning server was told, the learner is signed
+out and lands on the sign-in screen. The app does not say why, so tell the
+learner. The learner signs in again to see the new school and class.
+
+After a successful move the form closes, the list shows the new school and class,
+and a message says how it went:
+
+- **Success**: *Moved to [School]. The learner signs in again to see it.*
+- **Moved**: *Moved, but the learning server did not answer. Run Sync Students for
+  [School] on the Schools screen.* The move is saved in the admin and is not lost.
+  This message stays on screen until you close it. Run **Sync Students** for the
+  new school.
+- **Moved**: *Moved, but the learning server doesn't have this class or curriculum
+  yet. Run Sync Content, then Sync Students for [School].* Run them in that order.
+- **Moved**: *Moved to [School]. No learner server is set up here, so nothing was
+  pushed.* You see this only when no learning server is connected to the admin.
+
+### Remove (learners who have never signed in)
+
+**Remove** takes a learner's account away for good, and the username can be used
+again. It is for a mistake, such as a wrong username or a learner added twice,
+before the learner has ever used the app. It is the last item in a learner's menu,
+below a divider and in red.
+
+You see it only if your role may delete learners, and only on a row whose **Last
+Login** is empty. For a learner who has signed in or has any progress, use
+**Disable** instead; the account and its progress are kept.
+
+1. Choose **Manage** on the row, then **Remove**. A box asks *Remove [Username]? This
+   can't be undone. Only a learner who has never signed in can be removed.* with
+   **Remove** and **Cancel**.
+2. Choose **Remove**. The learner leaves the list and a success message says
+   *Removed. The username [Username] can be used again.*
+
+Before it removes anything, the admin checks that the learner has not signed in and
+has no progress, here and on the learning server. If the check cannot be made, the
+learner is not removed. A refused Remove shows one red message that stays until you
+close it, and the learner stays in the list. The messages are on
+[When something is refused](/admin-guide/when-something-is-refused#remove-a-learner).
+
+The list's **Last Login** column comes from the learning server. If the admin cannot
+reach it, every row can show an empty **Last Login**, so **Remove** appears on
+learners who have signed in. The admin still checks, and refuses those.
+
 ### Delete (teachers)
 
 **Delete** is the last item in a teacher's menu, below a divider and in red. It
-asks **Sure to delete?** with **OK** and **Cancel**; choose **OK** to go on. A success reads **Teacher deleted
-sucessfully** (the word "successfully" is misspelled on screen), and the teacher
-leaves the list. The learner server is not told at once: run **Sync Teachers** for
-the school after deleting a teacher, or they can still sign in to the app until you
-do. To stop a teacher signing in but keep the account, use **Disable** instead.
-A learner's menu has no Delete.
+asks **Sure to delete?** with **OK** and **Cancel**; choose **OK** to go on. The
+teacher leaves the list. Deleting a teacher is sent to the learner server at once,
+so the teacher can no longer sign in, and a message says how it went:
+
+- **Success**: *Deleted. The teacher can no longer sign in.*
+- **Success**: *Deleted. No learner server is set up here, so nothing was pushed.*
+  You see this only when no learning server is connected to the admin.
+- **Deleted**: *Deleted, but the learning server did not answer. Run Sync Teachers
+  for this school on the Schools screen.* The teacher is deleted in the admin and
+  is not lost, but the learner server was not told, so the teacher may still sign
+  in. This message stays on screen until you close it. Run **Sync Teachers** for the
+  school.
+- **Success**: *Teacher deleted.* You may see this plain line if the admin and the
+  server it talks to are not up to date with each other. It does not say whether
+  the learner server was told: run **Sync Teachers** for the school to be sure.
+
+To stop a teacher signing in but keep the account, use **Disable** instead. A
+teacher's username cannot be used again after a Delete. A learner's menu has no
+Delete: use **Disable**, or **Remove** for a learner who never signed in.
 
 ## Change learners already added
 
@@ -613,6 +717,12 @@ a new upload:
   and it replaces the old one.
 - `dateofjoin` is still required on every row. A row where it is blank, which
   can happen for a teacher account, is refused. Leave such rows out of the file.
+
+A learner stays in a school of its own organisation. If you change `schoolname`
+to a school of another organisation, that row is refused with *Choose a school of
+the learner's own organisation.* To move one learner to another school of the same
+organisation, use [Move to another school](#move-to-another-school-learners)
+instead.
 
 Edits reach the admin at once and the learner server at the next **Sync
 Students**.
